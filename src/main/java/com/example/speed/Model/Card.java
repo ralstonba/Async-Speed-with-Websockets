@@ -1,5 +1,7 @@
 package com.example.speed.Model;
 
+import com.google.gson.Gson;
+
 public class Card {
 
     private final Suit suit;
@@ -16,6 +18,11 @@ public class Card {
 
     public Rank getRank() {
         return rank;
+    }
+
+    public String getJSON() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 
     @Override
