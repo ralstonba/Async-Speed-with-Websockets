@@ -10,6 +10,12 @@ public class Deck {
 
     public Deck() {
         cards = new Stack<>();
+    }
+
+    public boolean init() {
+        if (cards == null) {
+            return false;
+        }
 
         for (Suit suit : Suit.values()) {
             for (Rank rank : Rank.values()) {
@@ -17,6 +23,8 @@ public class Deck {
                 cards.push(card);
             }
         }
+
+        return true;
     }
 
     public void shuffle() {
@@ -25,6 +33,10 @@ public class Deck {
 
     public Card dealCard() throws EmptyStackException {
         return cards.pop();
+    }
+
+    public void addCard(Card card) {
+        cards.push(card);
     }
 
     @Override
