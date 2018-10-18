@@ -33,6 +33,14 @@ public class Player {
         this.extraPile = extraPile;
     }
 
+    public Hand getHand() {
+        return hand;
+    }
+
+    public void setHand(Hand hand) {
+        this.hand = hand;
+    }
+
     public int getCardsRemaining() {
         return hand.getSize() + drawPile.getSize();
     }
