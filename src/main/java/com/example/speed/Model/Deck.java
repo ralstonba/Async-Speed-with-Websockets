@@ -39,6 +39,10 @@ public class Deck {
         cards.push(card);
     }
 
+    public int getSize() {
+        return cards.size();
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
