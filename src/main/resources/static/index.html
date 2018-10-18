@@ -3,13 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Speed - Asynchronous Card Game</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="cards.js"></script>
+    
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="cards.css" rel="stylesheet" type="text/css">
+    
 </head>
 <body>
+    
 <h1>
-    Hello World that I will destroy
+    Hello World
 </h1>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-<script src="/js/main.js"></script>
+    
+<div class="row">
+    <div class="col-md-6">
+        <div class="hand hhand-compact active-hand">
+            <img class='card' src='images/CLUBS02.jpg'>
+            <img class='card' src='images/DIAMONDS03.jpg'>
+            <img class='card' src='images/SPADES14.jpg'>
+            <img class='card' src='images/HEARTS10.jpg'>
+            <img class='card' src='images/CLUBS13.jpg'>
+            <img class='card' src='images/SPADES06.jpg'>
+            <img class='card' src='images/DIAMONDS11.jpg'>
+        </div>
+    </div>
+</div>
+    
 </body>
 </html>
