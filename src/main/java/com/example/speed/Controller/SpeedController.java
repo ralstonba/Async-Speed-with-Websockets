@@ -1,33 +1,35 @@
 package com.example.speed.Controller;
 
 import com.example.speed.Model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import java.util.Map;
 
 @Controller
 public class SpeedController {
-    // A controller (annotated with @Controller) needs to exist to serve static content
-
+    private static final Logger logger = LoggerFactory.getLogger(SpeedController.class);
     private static final SpeedInstance speedInstance = SpeedInstance.getInstance();
+
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
     // TODO: Add game logic stuff
 
     @MessageMapping("/rest/api/game.playCard")
-    @SendTo("/speed")
-    public SpeedInstance playCard(@Payload Action cardMove) {
+    public void playCard(@Payload Action cardMove, @Header("simpSessionId") String sessionID) {
         // TODO: Update game instance using Action
-        return SpeedInstance.getInstance();
 
-        // TODO: Deliver updated game state
+        sendGameState();
     }
 
     @MessageMapping("/rest/api/game.drawCard")
-    @SendTo("/speed")
-    public void drawCard(@Header("SimpSessionId") String sessionID) {
+    public void drawCard(@Header("simpSessionId") String sessionID) {
         Map playerMap = speedInstance.getPlayerMap();
         if (playerMap.containsKey(sessionID)) {
             Player player = (Player) playerMap.get(sessionID);
@@ -38,7 +40,8 @@ public class SpeedController {
             }
         }
 
-        // TODO: Deliver updated game state
+
+        sendGameState();
     }
 
     public boolean addPlayer(String sessionID) {
@@ -59,5 +62,12 @@ public class SpeedController {
             return true;
         }
         return false;
+    }
+
+    private void sendGameState() {
+        for (String playerID : speedInstance.getPlayerMap().keySet()) {
+            SanitizedGameState gameState = new SanitizedGameState(playerID, speedInstance);
+            simpMessagingTemplate.convertAndSendToUser(playerID, "/queuq/gamestate", gameState);
+        }
     }
 }
