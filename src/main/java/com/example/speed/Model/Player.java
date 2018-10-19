@@ -6,6 +6,7 @@ public class Player {
     private Deck drawPile;
     private Pile extraPile;
     private Hand hand;
+    private boolean handStale;
     private int cardsRemaining;
 
 
@@ -39,6 +40,14 @@ public class Player {
 
     public void setHand(Hand hand) {
         this.hand = hand;
+    }
+
+    public boolean isHandStale() {
+        return handStale;
+    }
+
+    public void setHandStale(boolean handStale) {
+        this.handStale = handStale;
     }
 
     public int getCardsRemaining() {

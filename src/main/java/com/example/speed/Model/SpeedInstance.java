@@ -2,6 +2,7 @@ package com.example.speed.Model;
 
 import com.example.speed.Controller.SpeedController;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class SpeedInstance {
@@ -9,11 +10,14 @@ public class SpeedInstance {
 
     private Map<String, Player> playerMap;
     private Deck deck;
+    private Card[] playOptions;
     private SpeedController speedController;
 
     private SpeedInstance() {
-        speedController = new SpeedController();
+        playerMap = new HashMap<>();
         deck = new Deck();
+        playOptions = new Card[2];
+        speedController = new SpeedController();
     }
 
     public static SpeedInstance getInstance() {
@@ -42,5 +46,13 @@ public class SpeedInstance {
 
     public void setSpeedController(SpeedController speedController) {
         this.speedController = speedController;
+    }
+
+    public Card[] getPlayOptions() {
+        return playOptions;
+    }
+
+    public void setPlayOptions(Card[] playOptions) {
+        this.playOptions = playOptions;
     }
 }
