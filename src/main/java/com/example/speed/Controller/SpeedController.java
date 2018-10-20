@@ -150,6 +150,25 @@ public class SpeedController {
     }
 
     private void playCardHelper(SpeedInstance thisGameState, Action cardMove, String sessionID) {
-        // TODO: Remove card from players hand, replace play option with played card
+        Player player = thisGameState.getPlayerMap().get(sessionID);
+
+        if (player != null) {
+            Card cardToPlay = cardMove.getSource();
+
+            if (player.getHand().getHand().remove(cardToPlay)) {
+                logger.debug("The source card was successfully removed from the players hand");
+
+                for (Card card : thisGameState.getPlayOptions()) {
+                    if (card.equals(cardMove.getDestination())) {
+                        card = cardMove.getSource();
+                    }
+                }
+
+            } else {
+                logger.warn("Failed to remove the source card from the players hand");
+            }
+        } else {
+            logger.warn("Player was null when attempting to play card, SessionID: {}", sessionID);
+        }
     }
 }
