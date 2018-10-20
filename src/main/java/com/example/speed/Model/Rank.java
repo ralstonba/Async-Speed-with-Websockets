@@ -2,7 +2,6 @@ package com.example.speed.Model;
 
 public enum Rank {
     ACE,
-    ONE,
     TWO,
     THREE,
     FOUR,
