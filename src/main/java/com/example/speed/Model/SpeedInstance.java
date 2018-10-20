@@ -6,12 +6,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SpeedInstance {
-    private static SpeedInstance ourInstance = new SpeedInstance();
+    // Volatile ensures the most recent value is returned
+    private static volatile SpeedInstance ourInstance;
 
     private Map<String, Player> playerMap;
     private Deck deck;
     private Card[] playOptions;
     private SpeedController speedController;
+
+    private static Object mutex = new Object();
 
     private SpeedInstance() {
         playerMap = new HashMap<>();
@@ -21,7 +24,18 @@ public class SpeedInstance {
     }
 
     public static SpeedInstance getInstance() {
-        return ourInstance;
+
+        SpeedInstance instance = ourInstance;
+        if (instance == null) {
+            synchronized (mutex) {
+                instance = ourInstance;
+                if (instance == null) {
+                    ourInstance = instance = new SpeedInstance();
+                }
+            }
+        }
+
+        return instance;
     }
 
     public Map<String, Player> getPlayerMap() {
