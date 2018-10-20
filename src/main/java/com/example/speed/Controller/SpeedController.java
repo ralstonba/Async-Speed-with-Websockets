@@ -88,7 +88,7 @@ public class SpeedController {
     }
 
     private boolean validatePlayerMove(@NotNull SpeedInstance thisGameState, Action cardMove, String sessionID) {
-        Player thisPlayer = speedInstance.getPlayerMap().get(thisGameState);
+        Player thisPlayer = speedInstance.getPlayerMap().get(sessionID);
 
         if (thisPlayer.getHand().getHand().contains(cardMove.getSource())) {
             if (Arrays.asList(speedInstance.getPlayOptions()).contains(cardMove.getDestination())) {
