@@ -40,9 +40,7 @@ public class SpeedController {
                 hand.addCard(deck.dealCard());
             }
         }
-
-
-        sendGameState();
+        sendGameState(speedInstance);
     }
 
     public boolean addPlayer(String sessionID) {
@@ -67,10 +65,10 @@ public class SpeedController {
         return false;
     }
 
-    private void sendGameState() {
-        for (String playerID : speedInstance.getPlayerMap().keySet()) {
-            SanitizedGameState gameState = new SanitizedGameState(playerID, speedInstance);
-            simpMessagingTemplate.convertAndSendToUser(playerID, "/queuq/gamestate", gameState);
+    private void sendGameState(SpeedInstance thisGameState) {
+        for (String playerID : thisGameState.getPlayerMap().keySet()) {
+            SanitizedGameState sanitizedGameState = new SanitizedGameState(playerID, thisGameState);
+            simpMessagingTemplate.convertAndSendToUser(playerID, "/queuq/gamestate", sanitizedGameState);
         }
     }
 }
