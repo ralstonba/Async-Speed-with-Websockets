@@ -15,7 +15,7 @@ import java.util.Map;
 @Controller
 public class SpeedController {
     private static final Logger logger = LoggerFactory.getLogger(SpeedController.class);
-    private static final SpeedInstance speedInstance = SpeedInstance.getInstance();
+    private static SpeedInstance speedInstance;
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -30,6 +30,7 @@ public class SpeedController {
 
     @MessageMapping("/rest/api/game.drawCard")
     public void drawCard(@Header("simpSessionId") String sessionID) {
+        speedInstance = SpeedInstance.getInstance();
         Map playerMap = speedInstance.getPlayerMap();
         if (playerMap.containsKey(sessionID)) {
             Player player = (Player) playerMap.get(sessionID);
@@ -45,6 +46,7 @@ public class SpeedController {
     }
 
     public boolean addPlayer(String sessionID) {
+        speedInstance = SpeedInstance.getInstance();
         Map playerMap = speedInstance.getPlayerMap();
         if (playerMap.size() < 2) {
             if (!playerMap.containsKey(sessionID)) {
@@ -56,6 +58,7 @@ public class SpeedController {
     }
 
     public boolean removePlayer(String sessionID) {
+        speedInstance = SpeedInstance.getInstance();
         Map playerMap = speedInstance.getPlayerMap();
         if (playerMap.containsKey(sessionID)) {
             playerMap.remove(sessionID);
