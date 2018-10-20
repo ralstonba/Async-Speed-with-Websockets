@@ -1,6 +1,7 @@
 package com.example.speed.Controller;
 
 import com.example.speed.Model.*;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class SpeedController {
         sendGameState(speedInstance);
     }
 
-    public boolean addPlayer(String sessionID) {
+    public boolean addPlayer(@NotNull String sessionID) {
         speedInstance = SpeedInstance.getInstance();
         Map playerMap = speedInstance.getPlayerMap();
         if (playerMap.size() < 2) {
@@ -69,7 +70,7 @@ public class SpeedController {
         return false;
     }
 
-    public boolean removePlayer(String sessionID) {
+    public boolean removePlayer(@NotNull String sessionID) {
         speedInstance = SpeedInstance.getInstance();
         Map playerMap = speedInstance.getPlayerMap();
         if (playerMap.containsKey(sessionID)) {
@@ -79,14 +80,14 @@ public class SpeedController {
         return false;
     }
 
-    private void sendGameState(SpeedInstance thisGameState) {
+    private void sendGameState(@NotNull SpeedInstance thisGameState) {
         for (String playerID : thisGameState.getPlayerMap().keySet()) {
             SanitizedGameState sanitizedGameState = new SanitizedGameState(playerID, thisGameState);
             simpMessagingTemplate.convertAndSendToUser(playerID, "/queuq/gamestate", sanitizedGameState);
         }
     }
 
-    private boolean validatePlayerMove(SpeedInstance thisGameState, Action cardMove, String sessionID) {
+    private boolean validatePlayerMove(@NotNull SpeedInstance thisGameState, Action cardMove, String sessionID) {
         Player thisPlayer = speedInstance.getPlayerMap().get(thisGameState);
 
         if (thisPlayer.getHand().getHand().contains(cardMove.getSource())) {
@@ -149,7 +150,7 @@ public class SpeedController {
         return false;
     }
 
-    private void playCardHelper(SpeedInstance thisGameState, Action cardMove, String sessionID) {
+    private void playCardHelper(@NotNull SpeedInstance thisGameState, Action cardMove, String sessionID) {
         Player player = thisGameState.getPlayerMap().get(sessionID);
 
         if (player != null) {
