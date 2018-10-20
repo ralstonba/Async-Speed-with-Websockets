@@ -64,6 +64,7 @@ public class SpeedController {
         if (playerMap.size() < 2) {
             if (!playerMap.containsKey(sessionID)) {
                 playerMap.put(sessionID, new Player(sessionID));
+                sendGameState(speedInstance);
                 return true;
             }
         }
