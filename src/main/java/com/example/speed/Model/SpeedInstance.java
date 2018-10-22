@@ -7,6 +7,7 @@ public class SpeedInstance {
     }
 
     public static SpeedInstance getInstance() {
+        
         return ourInstance;
     }
 }
