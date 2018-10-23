@@ -11,7 +11,7 @@ function connect(event) {
 }
 
 function onConnected() {
-    stompClient.subscribe("/speed", updateHandler); // Listen for updates to game state
+    stompClient.subscribe("/user/queue/gamestate", updateHandler); // Listen for updates to game state
 }
 
 function onError(error) {
