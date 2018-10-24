@@ -22,7 +22,7 @@ public class SpeedController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/rest/api/game.playCard")
+    @MessageMapping("/speed/game.playCard")
     public void playCard(@Payload Action cardMove, @Header("simpSessionId") String sessionID) {
         speedInstance = SpeedInstance.getInstance();
         logger.debug("playCard endpoint hit by user with sessionID: {}", sessionID);
@@ -43,7 +43,7 @@ public class SpeedController {
         sendGameState(speedInstance);
     }
 
-    @MessageMapping("/rest/api/game.drawCard")
+    @MessageMapping("/speed/game.drawCard")
     public void drawCard(@Header("simpSessionId") String sessionID) {
         speedInstance = SpeedInstance.getInstance();
         Map playerMap = speedInstance.getPlayerMap();
