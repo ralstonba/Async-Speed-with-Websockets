@@ -1,7 +1,6 @@
 package com.example.speed.Controller;
 
 import com.example.speed.Model.*;
-import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -20,7 +20,7 @@ public class SpeedController {
     private static SpeedInstance speedInstance;
 
     @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
+    private SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/rest/api/game.playCard")
     public void playCard(@Payload Action cardMove, @Header("simpSessionId") String sessionID) {
@@ -84,7 +84,7 @@ public class SpeedController {
     private void sendGameState(@NotNull SpeedInstance thisGameState) {
         for (String playerID : thisGameState.getPlayerMap().keySet()) {
             SanitizedGameState sanitizedGameState = new SanitizedGameState(playerID, thisGameState);
-            simpMessagingTemplate.convertAndSendToUser(playerID, "/queuq/gamestate", sanitizedGameState);
+            messagingTemplate.convertAndSendToUser(playerID, "/queuq/gamestate", sanitizedGameState);
         }
     }
 

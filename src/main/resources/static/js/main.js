@@ -2,12 +2,11 @@
 
 var stompClient = null;
 
-function connect(event) {
+function connect() {
     var socket = new SockJS("/ws");
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, onConnected, onError);
-    event.preventDefault();
 }
 
 function onConnected() {
@@ -50,7 +49,6 @@ function makeMove(event) {
     event.preventDefault();
 }
 
-function drawCard(event) {
-
-    event.preventDefault()
+function drawCard() {
+    stompClient.send("/speed/game.drawCard", {}, "Test");
 }
