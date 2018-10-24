@@ -43,8 +43,11 @@ public class SpeedController {
         sendGameState(speedInstance);
     }
 
-    @MessageMapping("/speed/game.drawCard")
+    @MessageMapping("/game.drawCard")
     public void drawCard(@Header("simpSessionId") String sessionID) {
+
+        messagingTemplate.convertAndSend("/queue/gamestate-user" + sessionID, "received");
+
         speedInstance = SpeedInstance.getInstance();
         Map playerMap = speedInstance.getPlayerMap();
         if (playerMap.containsKey(sessionID)) {
