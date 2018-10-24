@@ -10,7 +10,7 @@ function connect() {
 }
 
 function onConnected() {
-    stompClient.subscribe("/user/queue/gamestate", updateHandler); // Listen for updates to game state
+    stompClient.subscribe("/user/queue/reply", updateHandler); // Listen for updates to game state
 }
 
 function onError(error) {
