@@ -1,5 +1,6 @@
 package com.example.speed.Controller;
 
+import com.example.speed.Model.SpeedInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class WebSocketEventListener {
             logger.warn("New web socket connection, SessionID unknown");
         } else {
             logger.info("New web socket connection, SessionID: " + sessionID);
+            SpeedController speedController = SpeedInstance.getInstance().getSpeedController();
+
+            speedController.addPlayer(sessionID);
         }
     }
 

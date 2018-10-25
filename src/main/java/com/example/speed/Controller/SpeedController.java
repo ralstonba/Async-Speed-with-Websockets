@@ -67,8 +67,10 @@ public class SpeedController {
         Map playerMap = speedInstance.getPlayerMap();
         if (playerMap.size() < 2) {
             if (!playerMap.containsKey(sessionID)) {
-                playerMap.put(sessionID, new Player(sessionID));
-                sendGameState(speedInstance);
+                Player newPlayer = new Player();
+                newPlayer.init(sessionID);
+                playerMap.put(sessionID, newPlayer);
+                //sendGameState(speedInstance);
                 return true;
             }
         }
@@ -88,7 +90,7 @@ public class SpeedController {
     private void sendGameState(@NotNull SpeedInstance thisGameState) {
         for (String playerID : thisGameState.getPlayerMap().keySet()) {
             SanitizedGameState sanitizedGameState = new SanitizedGameState(playerID, thisGameState);
-            messagingTemplate.convertAndSendToUser(playerID, "/queuq/gamestate", sanitizedGameState);
+            messagingTemplate.convertAndSendToUser(playerID, "/queue/reply", sanitizedGameState);
         }
     }
 
