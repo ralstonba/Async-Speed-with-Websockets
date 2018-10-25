@@ -1,16 +1,42 @@
 .list-group-horizontal .list-group-item {
     display: inline-block;
 }
+
 .list-group-horizontal .list-group-item {
     margin-bottom: 0;
-    margin-left:-4px;
+    margin-left: -4px;
     margin-right: 0;
 }
+
 .list-group-horizontal .list-group-item:first-child {
-    border-top-right-radius:0;
-    border-bottom-left-radius:4px;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 4px;
 }
+
 .list-group-horizontal .list-group-item:last-child {
-    border-top-right-radius:4px;
-    border-bottom-left-radius:0;
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: 0;
+}
+
+.default-card {
+    height: 200px;
+    width: 150px;
+    padding-top: 75px;
+    text-align: center;
+    background-color: orangered;
+}
+
+.default-card.card-piece {
+    width: 5%;
+}
+
+.default-card:hover {
+    background-color: royalblue;
+    border-color: black;
+}
+
+.card-row {
+    min-height: 100px;
+    margin: auto;
+    width: 50%;
 }

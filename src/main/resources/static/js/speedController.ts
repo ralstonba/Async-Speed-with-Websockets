@@ -1,8 +1,8 @@
 ///<reference path="../../typescript/angular.d.ts"/>
-namespace Assignment3750{
+namespace Assignment3750 {
     export class SpeedCtrl {
-        stompClient:any;
-        title = "Hello World that I will destroy";
+        stompClient: any;
+        title = "Welcome to the wonderful world of SPEED";
         playableCards = [
             "OtherJack"
         ];
@@ -12,25 +12,39 @@ namespace Assignment3750{
             "King",
             "Ace"
         ];
-    addText = "";
-        constructor($scope: ng.IScope){
+        oppCards = [
+            "x",
+            "x",
+            "x",
+            "x"
+        ];
+        dropping = false;
+        addText = "";
+        gameState: Models.GameState;
+
+        constructor($scope: ng.IScope) {
             $scope["d"] = this;
+            this.connect()
         }
 
-        dropSuccessHandler($event,index,array){
-            array.splice(index,1);
+        dropSuccessHandler($event, index, array) {
+            if (this.dropping) {
+                array.splice(index, 1);
+            }
+            this.dropping = false;
         };
 
-        onDrop($event,$data,array){
+        onDrop($event, $data, array) {
             array.push($data);
+            this.dropping = true;
         };
 
-        connect(event) {
+        connect() {
             let socket = new SockJS("/ws");
             this.stompClient = Stomp.over(socket);
 
             this.stompClient.connect({}, this.onConnected, this.onError);
-            event.preventDefault();
+            //event.preventDefault();
         }
 
         onConnected() {
@@ -39,6 +53,7 @@ namespace Assignment3750{
 
         onError(error) {
             // TODO: Take some action on connection error
+            alert(error);
         }
 
         updateHandler(payload) {
@@ -55,13 +70,13 @@ namespace Assignment3750{
             // TODO: Draw gameboard's current state
         }
 
-        makeMove(event) {
+        makeMove(move) {
             /*
                 TODO: Decide on move encoding, capture onHover events?
                    {card: Card, destination: Index}
             */
 
-            let move = null; // Create valid move object
+            //let move = null; // Create valid move object
             if (move && this.stompClient) {
                 let command = {
                     sender: null,   // TODO: Need to identify players, use session ID?
@@ -70,18 +85,33 @@ namespace Assignment3750{
                 };
                 this.stompClient.send("/rest/api/game.playCard", {}, JSON.stringify(command));
             }
-            event.preventDefault();
+            //event.preventDefault();
         }
 
-        drawCard(event) {
+        drawCard() {
+            const endpoint = "/rest/api/game.drawCard";
+            if (this.stompClient) {
+                this.stompClient.send(endpoint, {}, JSON.stringify(""));
+            }
+            //event.preventDefault()
+        }
 
-            event.preventDefault()
+        playCard(card, target){
+            const endpoint = "/rest/api/game.playCard";
+            let request = {
+                target: target,
+                source: card
+            }
+            if (this.stompClient) {
+                this.stompClient.send(endpoint, {}, JSON.stringify(target));
+            }
         }
     }
+
     let app = angular.module("speedApp", ["ang-drag-drop"]);
-    app.controller("SpeedCtrl",SpeedCtrl);
+    app.controller("SpeedCtrl", SpeedCtrl);
 }
 
-declare var SockJS:any;
-declare var Stomp:any;
-declare var PLAY:any;
+declare var SockJS: any;
+declare var Stomp: any;
+declare var PLAY: any;

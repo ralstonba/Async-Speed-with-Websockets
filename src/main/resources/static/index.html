@@ -4,48 +4,61 @@
     <meta charset="UTF-8">
     <title>Speed - Asynchronous Card Game</title>
     <style>
-        [ng-cloak]{
-            display:none;
+        [ng-cloak] {
+            display: none;
         }
     </style>
 </head>
-<body ng-app="speedApp" ng-controller="SpeedCtrl" ng-cloak>
-<div class="container">
-<h1>
-    {{d.title}}
-</h1>
-<div class="row" style="border:1px solid gray;min-height:200px">
-    <div class="col-xs-6">
-        <ul class="list-group list-group-horizontal" ui-on-Drop="d.onDrop($event,$data,d.playableCards)">
-            <li class="list-group-item" ui-draggable="true" drag="card"
-                on-drop-success="d.dropSuccessHandler($event,$index,d.playableCards)"
-                ng-repeat="card in d.playableCards track by $index">
-                {{card}}
-            </li>
-        </ul>
+<body style="background-color:gray" ng-app="speedApp" ng-controller="SpeedCtrl" ng-cloak>
+<div class="container" style="background-color:green">
+    <h1 style="text-align: center;: center; color:white">
+        {{d.title}}
+    </h1>
+    <div class="card-row">
+        <div>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item default-card"
+                    ng-repeat="card in d.oppCards track by $index"
+                    ng-class="{'card-piece':$index!=0}">
+                    <span ng-if="$index==0">{{card}}</span>
+                </li>
+            </ul>
+        </div>
     </div>
-</div>
-    <div class="row" style=" margin-top:100px;border:1px solid gray;min-height:200px">
-    <div class="col-xs-6">
-        <ul class="list-group list-group-horizontal" ui-on-Drop="d.onDrop($event,$data,d.availableCards)">
-            <li class="list-group-item" ui-draggable="true" drag="card"
-                on-drop-success="d.dropSuccessHandler($event,$index,d.availableCards)"
-                ng-repeat="card in d.availableCards track by $index">
-                {{card}}
-            </li>
-        </ul>
+    <div class="card-row" ui-on-Drop="d.onDrop($event,$data,d.playableCards)">
+        <div>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item default-card" ui-draggable="true" drag="card"
+                    on-drop-success="d.dropSuccessHandler($event,$index,d.playableCards)"
+                    ng-repeat="card in d.playableCards track by $index"
+                    ng-class="{'card-piece':$index!=0}">
+                    <span ng-if="$index==0">{{card}}</span>
+                </li>
+            </ul>
+        </div>
     </div>
-</div>
+    <div class="card-row" ui-on-Drop="d.onDrop($event,$data,d.availableCards)">
+        <div>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item default-card" ui-draggable="true" drag="card"
+                    on-drop-success="d.dropSuccessHandler($event,$index,d.availableCards)"
+                    ng-repeat="card in d.availableCards track by $index"
+                    ng-class="{'card-piece':$index!=0}">
+                    <span ng-if="$index==0">{{card}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <link rel="stylesheet" href="css/speedDraggable.css">
-    <script src="js/thirdParty/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="js/thirdParty/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="js/thirdParty/angular.min.js"></script>
-    <script src="js/thirdParty/angularui_bootstrap.min.js"></script>
-    <script src="js/thirdParty/dragndrop.js"></script>
+<script src="js/thirdParty/angularui_bootstrap.min.js"></script>
+<script src="js/thirdParty/dragndrop.js"></script>
 <script src="js/speedController.js"></script>
 <!--<script src="/js/main.js"></script>-->
 </body>
