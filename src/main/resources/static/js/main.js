@@ -52,3 +52,7 @@ function makeMove(event) {
 function drawCard() {
     stompClient.send("/speed/game.drawCard", {}, "Test");
 }
+
+function initGame() {
+    stompClient.send("/speed/game.init", {}, null);
+}

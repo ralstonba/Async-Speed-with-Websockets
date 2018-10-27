@@ -1,6 +1,7 @@
 package com.example.speed.Controller;
 
 import com.example.speed.Model.*;
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 
 @Controller
@@ -22,7 +24,42 @@ public class SpeedController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/speed/game.playCard")
+    @MessageMapping("/game.init")
+    public void initGame() {
+        speedInstance = SpeedInstance.getInstance();
+        Map playerMap = speedInstance.getPlayerMap();
+
+        if (playerMap.size() == 2) {
+            // Initialize deck
+            Deck deck = speedInstance.getDeck();
+            deck.init();
+            deck.shuffle();
+
+            // Deal out play options
+            for (int i = 0; i < speedInstance.getPlayOptions().length; i++) {
+                speedInstance.getPlayOptions()[i] = deck.dealCard();
+            }
+
+            // Deal to players
+            Collection<Player> players = speedInstance.getPlayerMap().values();
+            for (Player player : players) {
+                for (int i = 0; i < 5; i++) {
+                    player.getExtraPile().push(deck.dealCard());
+                }
+
+                for (int i = 0; i < 20; i++) {
+                    player.getDrawPile().addCard(deck.dealCard());
+                }
+
+                for (int i = 0; i < 5; i++) {
+                    player.getHand().addCard(player.getDrawPile().dealCard());
+                }
+            }
+
+        }
+    }
+
+    @MessageMapping("/game.playCard")
     public void playCard(@Payload Action cardMove, @Header("simpSessionId") String sessionID) {
         speedInstance = SpeedInstance.getInstance();
         logger.debug("playCard endpoint hit by user with sessionID: {}", sessionID);
@@ -45,9 +82,6 @@ public class SpeedController {
 
     @MessageMapping("/game.drawCard")
     public void drawCard(@Header("simpSessionId") String sessionID) {
-
-        //messagingTemplate.convertAndSend("/queue/gamestate-user" + sessionID, "received");
-        messagingTemplate.convertAndSendToUser(sessionID, "/queue/reply", "received");
 
         speedInstance = SpeedInstance.getInstance();
         Map playerMap = speedInstance.getPlayerMap();
@@ -88,9 +122,10 @@ public class SpeedController {
     }
 
     private void sendGameState(@NotNull SpeedInstance thisGameState) {
+        Gson gson = new Gson();
         for (String playerID : thisGameState.getPlayerMap().keySet()) {
             SanitizedGameState sanitizedGameState = new SanitizedGameState(playerID, thisGameState);
-            messagingTemplate.convertAndSendToUser(playerID, "/queue/reply", sanitizedGameState);
+            messagingTemplate.convertAndSendToUser(playerID, "/queue/reply", gson.toJson(sanitizedGameState));
         }
     }
 
