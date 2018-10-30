@@ -8,6 +8,16 @@
             display: none;
         }
     </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="cards.js"></script>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="cards.css" rel="stylesheet" type="text/css">
+
 </head>
 <body style="background-color:gray" ng-app="speedApp" ng-controller="SpeedCtrl" ng-cloak>
 <div class="container" style="background-color:green">
@@ -48,6 +58,67 @@
                 </li>
             </ul>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="hand hhand active-hand">
+                <img class='card' alt="card1" src='img/2CLUBS.png'>
+                <img class='card' alt="card2" src='img/3DIAMONDS.png'>
+                <img class='card' alt="card3" src='img/1SPADES.png'>
+                <img class='card' alt="card4" src='img/10HEARTS.png'>
+                <img class='card' alt="card5" src='img/13CLUBS.png'>
+                <img class='card' alt="card6" src='img/6SPADES.png'>
+                <img class='card' alt="card7" src='img/12DIAMONDS.png'>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="hand hhand-compact active-hand">
+                <img class='card' alt="card1" src='img/2CLUBS.png'>
+                <img class='card' alt="card2" src='img/3DIAMONDS.png'>
+                <img class='card' alt="card3" src='img/1SPADES.png'>
+                <img class='card' alt="card4" src='img/10HEARTS.png'>
+                <img class='card' alt="card5" src='img/13CLUBS.png'>
+                <img class='card' alt="card6" src='img/6SPADES.png'>
+                <img class='card' alt="card7" src='img/12DIAMONDS.png'>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="hand fan active-hand">
+                <img class='card' alt="card1" src='img/2CLUBS.png'>
+                <img class='card' alt="card2" src='img/3DIAMONDS.png'>
+                <img class='card' alt="card3" src='img/1SPADES.png'>
+                <img class='card' alt="card4" src='img/10HEARTS.png'>
+                <img class='card' alt="card5" src='img/13CLUBS.png'>
+                <img class='card' alt="card6" src='img/6SPADES.png'>
+                <img class='card' alt="card7" src='img/12DIAMONDS.png'>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="hand vhand-compact active-hand">
+                <img class='card' alt="card1" src='img/2CLUBS.png'>
+                <img class='card' alt="card2" src='img/3DIAMONDS.png'>
+                <img class='card' alt="card3" src='img/1SPADES.png'>
+                <img class='card' alt="card4" src='img/10HEARTS.png'>
+                <img class='card' alt="card5" src='img/13CLUBS.png'>
+                <img class='card' alt="card6" src='img/6SPADES.png'>
+                <img class='card' alt="card7" src='img/12DIAMONDS.png'>
+            </div>
+        </div>
+    </div>
+
+    <div class='hand' data-hand='flow: vertical; spacing: 0.01; width: 80; cards: BCard_Back, BCard_Back'>
+    </div>
+
+    <div class='hand' data-hand='flow: vertical; spacing: 0.01; width: 80; cards: RCard_Back, RCard_Back'>
     </div>
 </div>
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
