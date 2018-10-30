@@ -78,7 +78,7 @@ namespace Assignment3750 {
         }
 
         onConnected() {
-            this.stompClient.subscribe("/speed", this.updateHandler); // Listen for updates to game state
+            this.stompClient.subscribe("/user/queue/reply", this.updateHandler); // Listen for updates to game state
         }
 
         onError(error) {
@@ -119,7 +119,15 @@ namespace Assignment3750 {
         // }
 
         drawCard() {
-            const endpoint = "/rest/api/game.drawCard";
+            const endpoint = "/speed/game.drawCard";
+            if (this.stompClient) {
+                this.stompClient.send(endpoint, {}, JSON.stringify(""));
+            }
+            //event.preventDefault()
+        }
+
+        initGame() {
+            const endpoint = "/speed/game.init";
             if (this.stompClient) {
                 this.stompClient.send(endpoint, {}, JSON.stringify(""));
             }
