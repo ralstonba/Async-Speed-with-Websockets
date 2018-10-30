@@ -3,20 +3,44 @@ namespace Assignment3750 {
     export class SpeedCtrl {
         stompClient: any;
         title = "Welcome to the wonderful world of SPEED";
-        playableCards = [
-            "OtherJack"
+        playedCards: Models.Card[] = [];
+        playCard1: Models.Card;
+        playCard2: Models.Card;
+        availableCards: Models.Card[] = [
+            {
+                id: "Jack",
+                src: "img/11CLUBS.png"
+            },
+            {
+                id: "Queen",
+                src: "img/12DIAMONDS.png"
+            },
+            {
+                id: "King",
+                src: "img/13CLUBS.png"
+            },
+            {
+                id: "Ace",
+                src: "img/1HEARTS.png"
+            }
         ];
-        availableCards = [
-            "Jack",
-            "Queen",
-            "King",
-            "Ace"
-        ];
-        oppCards = [
-            "x",
-            "x",
-            "x",
-            "x"
+        oppCards: Models.Card[] = [
+            {
+                id: "x1",
+                src: "img/9HEARTS.png"
+            },
+            {
+                id: "x2",
+                src: "img/7SPADES.png"
+            },
+            {
+                id: "x3",
+                src: "img/5SPADES.png"
+            },
+            {
+                id: "x4",
+                src: "img/10CLUBS.png"
+            }
         ];
         dropping = false;
         addText = "";
@@ -24,18 +48,24 @@ namespace Assignment3750 {
 
         constructor($scope: ng.IScope) {
             $scope["d"] = this;
-            this.connect()
+            this.connect();
+            this.playCard1 = {id:"first", src:"img/10SPADES.png"}
+            this.playCard2 = {id:"second", src:"img/2SPADES.png"}
         }
 
-        dropSuccessHandler($event, index, array) {
+        dropSuccessHandler($event, index, array: Models.Card[]) {
             if (this.dropping) {
                 array.splice(index, 1);
             }
             this.dropping = false;
         };
 
-        onDrop($event, $data, array) {
-            array.push($data);
+        onDrop($event, card: Models.Card, array: Models.Card[], stack: number) {
+            array.push(card);
+            if (stack === 1)
+                this.playCard1 = card;
+            else
+                this.playCard2 = card;
             this.dropping = true;
         };
 
@@ -70,23 +100,23 @@ namespace Assignment3750 {
             // TODO: Draw gameboard's current state
         }
 
-        makeMove(move) {
-            /*
-                TODO: Decide on move encoding, capture onHover events?
-                   {card: Card, destination: Index}
-            */
-
-            //let move = null; // Create valid move object
-            if (move && this.stompClient) {
-                let command = {
-                    sender: null,   // TODO: Need to identify players, use session ID?
-                    move: move,
-                    type: PLAY
-                };
-                this.stompClient.send("/rest/api/game.playCard", {}, JSON.stringify(command));
-            }
-            //event.preventDefault();
-        }
+        // makeMove(move) {
+        //     /*
+        //         TODO: Decide on move encoding, capture onHover events?
+        //            {card: Card, destination: Index}
+        //     */
+        //
+        //     //let move = null; // Create valid move object
+        //     if (move && this.stompClient) {
+        //         let command = {
+        //             sender: null,   // TODO: Need to identify players, use session ID?
+        //             move: move,
+        //             type: PLAY
+        //         };
+        //         this.stompClient.send("/rest/api/game.playCard", {}, JSON.stringify(command));
+        //     }
+        //     //event.preventDefault();
+        // }
 
         drawCard() {
             const endpoint = "/rest/api/game.drawCard";
@@ -96,7 +126,7 @@ namespace Assignment3750 {
             //event.preventDefault()
         }
 
-        playCard(card, target){
+        playCard(card, target) {
             const endpoint = "/rest/api/game.playCard";
             let request = {
                 target: target,
