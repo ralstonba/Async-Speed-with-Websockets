@@ -2,16 +2,15 @@
 
 var stompClient = null;
 
-function connect(event) {
+function connect() {
     var socket = new SockJS("/ws");
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, onConnected, onError);
-    event.preventDefault();
 }
 
 function onConnected() {
-    stompClient.subscribe("/user/queue/gamestate", updateHandler); // Listen for updates to game state
+    stompClient.subscribe("/user/queue/reply", updateHandler); // Listen for updates to game state
 }
 
 function onError(error) {
@@ -50,7 +49,6 @@ function makeMove(event) {
     event.preventDefault();
 }
 
-function drawCard(event) {
-
-    event.preventDefault()
+function drawCard() {
+    stompClient.send("/speed/game.drawCard", {}, "Test");
 }

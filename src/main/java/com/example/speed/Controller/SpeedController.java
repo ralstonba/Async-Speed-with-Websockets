@@ -1,7 +1,7 @@
 package com.example.speed.Controller;
 
 import com.example.speed.Model.*;
-import org.jetbrains.annotations.NotNull;
+import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,18 +11,23 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 @Controller
 public class SpeedController {
+
     private static final Logger logger = LoggerFactory.getLogger(SpeedController.class);
     private static SpeedInstance speedInstance;
 
     @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
+    private SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/rest/api/game.playCard")
+    @MessageMapping("/speed/game.playCard")
     public void playCard(@Payload Action cardMove, @Header("simpSessionId") String sessionID) {
         speedInstance = SpeedInstance.getInstance();
         logger.debug("playCard endpoint hit by user with sessionID: {}", sessionID);
@@ -43,8 +48,12 @@ public class SpeedController {
         sendGameState(speedInstance);
     }
 
-    @MessageMapping("/rest/api/game.drawCard")
+    @MessageMapping("/game.drawCard")
     public void drawCard(@Header("simpSessionId") String sessionID) {
+
+        //messagingTemplate.convertAndSend("/queue/gamestate-user" + sessionID, "received");
+        messagingTemplate.convertAndSendToUser(sessionID, "/queue/reply", "received");
+
         speedInstance = SpeedInstance.getInstance();
         Map playerMap = speedInstance.getPlayerMap();
         if (playerMap.containsKey(sessionID)) {
@@ -58,13 +67,33 @@ public class SpeedController {
         sendGameState(speedInstance);
     }
 
+    @MessageMapping("/game.stalemate")
+    public void stalemate(@Header("simpSessionId") String sessionID) {
+        speedInstance = SpeedInstance.getInstance();
+        int count;
+
+        Player player = speedInstance.getPlayerMap().get(sessionID);
+        count = 0;
+        for (int i = 0; i < 5; i++) {
+            if (player.getHand().getHand().get(i) != speedInstance.getPlayOptions()[0]
+                    && player.getHand().getHand().get(i) != speedInstance.getPlayOptions()[1]) {
+                count++;
+            }
+        }
+        if (count == 5) {
+            player.setHandStale(true);
+        }
+    }
+
     public boolean addPlayer(@NotNull String sessionID) {
         speedInstance = SpeedInstance.getInstance();
         Map playerMap = speedInstance.getPlayerMap();
         if (playerMap.size() < 2) {
             if (!playerMap.containsKey(sessionID)) {
-                playerMap.put(sessionID, new Player(sessionID));
-                sendGameState(speedInstance);
+                Player newPlayer = new Player();
+                newPlayer.init(sessionID);
+                playerMap.put(sessionID, newPlayer);
+                //sendGameState(speedInstance);
                 return true;
             }
         }
@@ -84,7 +113,7 @@ public class SpeedController {
     private void sendGameState(@NotNull SpeedInstance thisGameState) {
         for (String playerID : thisGameState.getPlayerMap().keySet()) {
             SanitizedGameState sanitizedGameState = new SanitizedGameState(playerID, thisGameState);
-            simpMessagingTemplate.convertAndSendToUser(playerID, "/queuq/gamestate", sanitizedGameState);
+            messagingTemplate.convertAndSendToUser(playerID, "/queue/reply", sanitizedGameState);
         }
     }
 
@@ -95,12 +124,11 @@ public class SpeedController {
             if (Arrays.asList(speedInstance.getPlayOptions()).contains(cardMove.getDestination())) {
                 logger.debug("Player {} selected a valid destination target, checking for acceptance", sessionID);
 
-                    /*
+                /*
                         Valid moves are defined as source being +/- 1 from destination
                         - Special consideration for playing an Ace; it can be played on either a 2 or King
                         - Special consideration for playing a King; it can be player on either an Ace or Queen
-                    */
-
+                 */
                 Rank sourceCard = cardMove.getSource().getRank();
                 Rank destinationCard = cardMove.getDestination().getRank();
 
