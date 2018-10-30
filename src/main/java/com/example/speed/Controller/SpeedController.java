@@ -18,12 +18,13 @@ import java.util.Map;
 
 @Controller
 public class SpeedController {
+
     private static final Logger logger = LoggerFactory.getLogger(SpeedController.class);
     private static SpeedInstance speedInstance;
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
-
+    
     @MessageMapping("/game.init")
     public void initGame() {
         speedInstance = SpeedInstance.getInstance();
@@ -82,7 +83,6 @@ public class SpeedController {
 
     @MessageMapping("/game.drawCard")
     public void drawCard(@Header("simpSessionId") String sessionID) {
-
         speedInstance = SpeedInstance.getInstance();
         Map playerMap = speedInstance.getPlayerMap();
         if (playerMap.containsKey(sessionID)) {
@@ -94,6 +94,24 @@ public class SpeedController {
             }
         }
         sendGameState(speedInstance);
+    }
+
+    @MessageMapping("/game.stalemate")
+    public void stalemate(@Header("simpSessionId") String sessionID) {
+        speedInstance = SpeedInstance.getInstance();
+        int count;
+
+        Player player = speedInstance.getPlayerMap().get(sessionID);
+        count = 0;
+        for (int i = 0; i < 5; i++) {
+            if (player.getHand().getHand().get(i) != speedInstance.getPlayOptions()[0]
+                    && player.getHand().getHand().get(i) != speedInstance.getPlayOptions()[1]) {
+                count++;
+            }
+        }
+        if (count == 5) {
+            player.setHandStale(true);
+        }
     }
 
     public boolean addPlayer(@NotNull String sessionID) {
@@ -136,12 +154,11 @@ public class SpeedController {
             if (Arrays.asList(speedInstance.getPlayOptions()).contains(cardMove.getDestination())) {
                 logger.debug("Player {} selected a valid destination target, checking for acceptance", sessionID);
 
-                    /*
+                /*
                         Valid moves are defined as source being +/- 1 from destination
                         - Special consideration for playing an Ace; it can be played on either a 2 or King
                         - Special consideration for playing a King; it can be player on either an Ace or Queen
-                    */
-
+                 */
                 Rank sourceCard = cardMove.getSource().getRank();
                 Rank destinationCard = cardMove.getDestination().getRank();
 
