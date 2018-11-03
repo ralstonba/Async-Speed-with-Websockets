@@ -65,7 +65,7 @@ public class SpeedController {
         speedInstance = SpeedInstance.getInstance();
         logger.debug("playCard endpoint hit by user with sessionID: {}", sessionID);
 
-        if (cardMove.getType() == ActionType.PLAY && sessionID != null) {
+        if (sessionID != null) {
 
             if (validatePlayerMove(speedInstance, cardMove, sessionID)) {
                 logger.info("playCard request from {} valid", sessionID);
@@ -75,7 +75,7 @@ public class SpeedController {
             }
 
         } else {
-            logger.debug("playCard request from {} with ActionType {} malformed, REJECTED", sessionID, cardMove.getType());
+            logger.debug("playCard request from unknown sessionID, REJECTED");
         }
 
         sendGameState(speedInstance);

@@ -49,7 +49,7 @@ namespace Assignment3750 {
         constructor($scope: ng.IScope) {
             $scope["d"] = this;
             this.connect();
-            this.playCard1 = {id:"first", src:"img/10SPADES.png"}
+            this.playCard1 = {id: "first", src: "img/10SPADES.png"};
             this.playCard2 = {id:"second", src:"img/2SPADES.png"}
         }
 
@@ -135,11 +135,11 @@ namespace Assignment3750 {
         }
 
         playCard(card, target) {
-            const endpoint = "/rest/api/game.playCard";
+            const endpoint = "/speed/game.playCard";
             let request = {
                 target: target,
                 source: card
-            }
+            };
             if (this.stompClient) {
                 this.stompClient.send(endpoint, {}, JSON.stringify(target));
             }
