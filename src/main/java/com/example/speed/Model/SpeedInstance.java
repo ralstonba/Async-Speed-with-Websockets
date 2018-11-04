@@ -13,6 +13,7 @@ public class SpeedInstance {
     private Deck deck;
     private Card[] playOptions;
     private SpeedController speedController;
+    private GameState gameState;
 
     private static Object mutex = new Object();
 
@@ -21,6 +22,7 @@ public class SpeedInstance {
         deck = new Deck();
         playOptions = new Card[2];
         speedController = new SpeedController();
+        gameState = GameState.AWAITING_PLAYERS;
     }
 
     public static SpeedInstance getInstance() {
@@ -68,5 +70,13 @@ public class SpeedInstance {
 
     public void setPlayOptions(Card[] playOptions) {
         this.playOptions = playOptions;
+    }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 }

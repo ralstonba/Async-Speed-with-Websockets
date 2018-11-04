@@ -30,7 +30,8 @@ public class SpeedController {
         speedInstance = SpeedInstance.getInstance();
         Map playerMap = speedInstance.getPlayerMap();
 
-        if (playerMap.size() == 2) {
+        if (playerMap.size() == 2 && (speedInstance.getGameState() == GameState.AWAITING_PLAYERS ||
+                speedInstance.getGameState() == GameState.COMPLETE)) {
             // Initialize deck
             Deck deck = speedInstance.getDeck();
             deck.init();
@@ -56,7 +57,7 @@ public class SpeedController {
                     player.getHand().addCard(player.getDrawPile().dealCard());
                 }
             }
-
+            speedInstance.setGameState(GameState.IN_PROGRESS);
         }
     }
 
@@ -78,7 +79,12 @@ public class SpeedController {
             logger.debug("playCard request from unknown sessionID, REJECTED");
         }
 
-        sendGameState(speedInstance);
+        if (checkWinner(speedInstance, sessionID)) {
+            speedInstance.setGameState(GameState.COMPLETE);
+            sendGameState(speedInstance);
+        } else {
+            sendGameState(speedInstance);
+        }
     }
 
     @MessageMapping("/game.drawCard")
@@ -111,6 +117,17 @@ public class SpeedController {
         }
         if (count == 5) {
             player.setHandStale(true);
+        }
+
+        boolean isGameStale = true;
+        for (Player thisPlayer : speedInstance.getPlayerMap().values()) {
+            if (!thisPlayer.isHandStale()) {
+                isGameStale = false;
+                break;
+            }
+        }
+        if (isGameStale) {
+            speedInstance.setGameState(GameState.STALE);
         }
     }
 
@@ -230,5 +247,11 @@ public class SpeedController {
         } else {
             logger.warn("Player was null when attempting to play card, SessionID: {}", sessionID);
         }
+    }
+
+    private boolean checkWinner(SpeedInstance thisGameState, String sessionID) {
+        Player thisPlayer = thisGameState.getPlayerMap().get(sessionID);
+
+        return thisPlayer.getCardsRemaining() == 0 && thisGameState.getGameState() == GameState.IN_PROGRESS;
     }
 }
