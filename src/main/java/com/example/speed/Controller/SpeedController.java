@@ -58,6 +58,7 @@ public class SpeedController {
                 }
             }
             speedInstance.setGameState(GameState.IN_PROGRESS);
+            sendGameState(speedInstance);
         }
     }
 
