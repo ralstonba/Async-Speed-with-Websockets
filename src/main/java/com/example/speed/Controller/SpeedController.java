@@ -18,18 +18,20 @@ import java.util.Map;
 
 @Controller
 public class SpeedController {
+
     private static final Logger logger = LoggerFactory.getLogger(SpeedController.class);
     private static SpeedInstance speedInstance;
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
-
+    
     @MessageMapping("/game.init")
     public void initGame() {
         speedInstance = SpeedInstance.getInstance();
         Map playerMap = speedInstance.getPlayerMap();
 
-        if (playerMap.size() == 2) {
+        if (playerMap.size() == 2 && (speedInstance.getGameState() == GameState.AWAITING_PLAYERS ||
+                speedInstance.getGameState() == GameState.COMPLETE)) {
             // Initialize deck
             Deck deck = speedInstance.getDeck();
             deck.init();
@@ -55,7 +57,7 @@ public class SpeedController {
                     player.getHand().addCard(player.getDrawPile().dealCard());
                 }
             }
-
+            speedInstance.setGameState(GameState.IN_PROGRESS);
         }
     }
 
@@ -64,7 +66,7 @@ public class SpeedController {
         speedInstance = SpeedInstance.getInstance();
         logger.debug("playCard endpoint hit by user with sessionID: {}", sessionID);
 
-        if (cardMove.getType() == ActionType.PLAY && sessionID != null) {
+        if (sessionID != null) {
 
             if (validatePlayerMove(speedInstance, cardMove, sessionID)) {
                 logger.info("playCard request from {} valid", sessionID);
@@ -74,15 +76,19 @@ public class SpeedController {
             }
 
         } else {
-            logger.debug("playCard request from {} with ActionType {} malformed, REJECTED", sessionID, cardMove.getType());
+            logger.debug("playCard request from unknown sessionID, REJECTED");
         }
 
-        sendGameState(speedInstance);
+        if (checkWinner(speedInstance, sessionID)) {
+            speedInstance.setGameState(GameState.COMPLETE);
+            sendGameState(speedInstance);
+        } else {
+            sendGameState(speedInstance);
+        }
     }
 
     @MessageMapping("/game.drawCard")
     public void drawCard(@Header("simpSessionId") String sessionID) {
-
         speedInstance = SpeedInstance.getInstance();
         Map playerMap = speedInstance.getPlayerMap();
         if (playerMap.containsKey(sessionID)) {
@@ -94,6 +100,35 @@ public class SpeedController {
             }
         }
         sendGameState(speedInstance);
+    }
+
+    @MessageMapping("/game.stalemate")
+    public void stalemate(@Header("simpSessionId") String sessionID) {
+        speedInstance = SpeedInstance.getInstance();
+        int count;
+
+        Player player = speedInstance.getPlayerMap().get(sessionID);
+        count = 0;
+        for (int i = 0; i < 5; i++) {
+            if (player.getHand().getHand().get(i) != speedInstance.getPlayOptions()[0]
+                    && player.getHand().getHand().get(i) != speedInstance.getPlayOptions()[1]) {
+                count++;
+            }
+        }
+        if (count == 5) {
+            player.setHandStale(true);
+        }
+
+        boolean isGameStale = true;
+        for (Player thisPlayer : speedInstance.getPlayerMap().values()) {
+            if (!thisPlayer.isHandStale()) {
+                isGameStale = false;
+                break;
+            }
+        }
+        if (isGameStale) {
+            speedInstance.setGameState(GameState.STALE);
+        }
     }
 
     public boolean addPlayer(@NotNull String sessionID) {
@@ -136,12 +171,11 @@ public class SpeedController {
             if (Arrays.asList(speedInstance.getPlayOptions()).contains(cardMove.getDestination())) {
                 logger.debug("Player {} selected a valid destination target, checking for acceptance", sessionID);
 
-                    /*
+                /*
                         Valid moves are defined as source being +/- 1 from destination
                         - Special consideration for playing an Ace; it can be played on either a 2 or King
                         - Special consideration for playing a King; it can be player on either an Ace or Queen
-                    */
-
+                 */
                 Rank sourceCard = cardMove.getSource().getRank();
                 Rank destinationCard = cardMove.getDestination().getRank();
 
@@ -213,5 +247,11 @@ public class SpeedController {
         } else {
             logger.warn("Player was null when attempting to play card, SessionID: {}", sessionID);
         }
+    }
+
+    private boolean checkWinner(SpeedInstance thisGameState, String sessionID) {
+        Player thisPlayer = thisGameState.getPlayerMap().get(sessionID);
+
+        return thisPlayer.getCardsRemaining() == 0 && thisGameState.getGameState() == GameState.IN_PROGRESS;
     }
 }

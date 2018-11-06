@@ -32,11 +32,11 @@ namespace Assignment3750 {
         addText = "";
         gameState: Models.GameState;
 
-        constructor(private $scope: ng.IScope) {
+        constructor($scope: ng.IScope) {
             $scope["d"] = this;
             this.connect();
-            this.playCard1 = {id: "first", src: "img/10SPADES.png"}
-            this.playCard2 = {id: "second", src: "img/2SPADES.png"}
+            this.playCard1 = {id: "first", src: "img/10SPADES.png"};
+            this.playCard2 = {id:"second", src:"img/2SPADES.png"}
             currentController = this;
         }
 
@@ -65,7 +65,7 @@ namespace Assignment3750 {
         }
 
         onConnected() {
-            currentController.stompClient.subscribe("/user/queue/reply", currentController.updateHandler); // Listen for updates to game state
+            this.stompClient.subscribe("/user/queue/reply", this.updateHandler); // Listen for updates to game state
         }
 
         onError(error) {
@@ -75,7 +75,7 @@ namespace Assignment3750 {
 
         updateHandler(payload) {
 
-            let gameState: Models.GameState = JSON.parse(payload.body); // TODO: Should the server send the entire game state each time there is an update? NOOOO!!!
+            let gameState = JSON.parse(payload.body); // TODO: Should the server send the entire game state each time there is an update?
 
             // Do stuff?
 
@@ -141,11 +141,11 @@ namespace Assignment3750 {
         }
 
         playCard(card, target) {
-            const endpoint = "/rest/api/game.playCard";
+            const endpoint = "/speed/game.playCard";
             let request = {
                 target: target,
                 source: card
-            }
+            };
             if (this.stompClient) {
                 this.stompClient.send(endpoint, {}, JSON.stringify(target));
             }
