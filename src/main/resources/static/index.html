@@ -16,12 +16,12 @@
     </h1>
     <div class="card-row">
         <div class="row">
-            <div class="col-xs-6">
-                <div class="hand hhand-compact">
-                    <img ng-repeat="card in d.oppCards track by $index"
-                         class="card" alt="card{{$index}}" src="{{card.src}}"/>
-                </div>
-            </div>
+            <!--<div class="col-xs-6">-->
+                <!--<div class="hand hhand-compact">-->
+                    <!--<img ng-repeat="card in d.oppCards track by $index"-->
+                         <!--class="card" alt="card{{$index}}" src="{{card.src}}"/>-->
+                <!--</div>-->
+            <!--</div>-->
             <div class="col-xs-6" style="float:right">
                 <img class="card" alt="card10" src="img/BCard_Back.png"/>
             </div>
@@ -52,8 +52,8 @@
             <div class="col-xs-6">
                 <div class="hand hhand-compact active-hand">
                     <img ui-draggable="true" drag="card"
-                         on-drop-success="d.dropSuccessHandler($event,$index,d.availableCards)"
-                         ng-repeat="card in d.gamesState.availableCards track by $index"
+                         on-drop-success="d.dropSuccessHandler($event,$index,d.gameState.availableCards)"
+                         ng-repeat="card in d.gameState.availableCards track by $index"
                          class="card" alt="card{{$index}}" src="{{card.src}}"/>
                 </div>
             </div>

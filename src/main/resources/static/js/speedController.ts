@@ -32,7 +32,7 @@ namespace Assignment3750 {
         addText = "";
         gameState: Models.GameState;
 
-        constructor($scope: ng.IScope) {
+        constructor(private $scope: ng.IScope) {
             $scope["d"] = this;
             this.connect();
             this.playCard1 = {id: "first", src: "img/10SPADES.png"};
@@ -41,19 +41,19 @@ namespace Assignment3750 {
         }
 
         dropSuccessHandler($event, index, array: Models.Card[]) {
-            if (this.dropping) {
+            if (currentController.dropping) {
                 array.splice(index, 1);
             }
-            this.dropping = false;
+            currentController.dropping = false;
         };
 
         onDrop($event, card: Models.Card, array: Models.Card[], stack: number) {
             array.push(card);
             if (stack === 1)
-                this.playCard1 = card;
+                currentController.playCard1 = card;
             else
-                this.playCard2 = card;
-            this.dropping = true;
+                currentController.playCard2 = card;
+            currentController.dropping = true;
         };
 
         connect() {
@@ -65,7 +65,8 @@ namespace Assignment3750 {
         }
 
         onConnected() {
-            this.stompClient.subscribe("/user/queue/reply", this.updateHandler); // Listen for updates to game state
+            currentController.stompClient.subscribe("/user/queue/reply", currentController.updateHandler); // Listen for updates to game state
+            currentController.drawGameBoard({} as any);
         }
 
         onError(error) {
@@ -104,6 +105,7 @@ namespace Assignment3750 {
                     src: "img/1HEARTS.png"
                 }
             ];
+            this.$scope.$apply();
         }
 
         // makeMove(move) {

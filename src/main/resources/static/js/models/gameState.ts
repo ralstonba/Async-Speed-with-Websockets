@@ -8,5 +8,6 @@ namespace Models{
         myHandStale: boolean;
         playCard1: Models.Card;
         playCard2: Models.Card;
+        availableCards: Models.Card[];
     }
 }
