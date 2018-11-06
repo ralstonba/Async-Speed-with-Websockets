@@ -1,29 +1,15 @@
 ///<reference path="../../typescript/angular.d.ts"/>
 namespace Assignment3750 {
+    import GameState = Models.GameState;
+    export var currentController: SpeedCtrl;
+
     export class SpeedCtrl {
         stompClient: any;
         title = "Welcome to the wonderful world of SPEED";
         playedCards: Models.Card[] = [];
         playCard1: Models.Card;
         playCard2: Models.Card;
-        availableCards: Models.Card[] = [
-            {
-                id: "Jack",
-                src: "img/11CLUBS.png"
-            },
-            {
-                id: "Queen",
-                src: "img/12DIAMONDS.png"
-            },
-            {
-                id: "King",
-                src: "img/13CLUBS.png"
-            },
-            {
-                id: "Ace",
-                src: "img/1HEARTS.png"
-            }
-        ];
+
         oppCards: Models.Card[] = [
             {
                 id: "x1",
@@ -46,11 +32,12 @@ namespace Assignment3750 {
         addText = "";
         gameState: Models.GameState;
 
-        constructor($scope: ng.IScope) {
+        constructor(private $scope: ng.IScope) {
             $scope["d"] = this;
             this.connect();
-            this.playCard1 = {id:"first", src:"img/10SPADES.png"}
-            this.playCard2 = {id:"second", src:"img/2SPADES.png"}
+            this.playCard1 = {id: "first", src: "img/10SPADES.png"}
+            this.playCard2 = {id: "second", src: "img/2SPADES.png"}
+            currentController = this;
         }
 
         dropSuccessHandler($event, index, array: Models.Card[]) {
@@ -78,7 +65,7 @@ namespace Assignment3750 {
         }
 
         onConnected() {
-            this.stompClient.subscribe("/user/queue/reply", this.updateHandler); // Listen for updates to game state
+            currentController.stompClient.subscribe("/user/queue/reply", currentController.updateHandler); // Listen for updates to game state
         }
 
         onError(error) {
@@ -88,16 +75,35 @@ namespace Assignment3750 {
 
         updateHandler(payload) {
 
-            let gameState = JSON.parse(payload.body); // TODO: Should the server send the entire game state each time there is an update?
+            let gameState: Models.GameState = JSON.parse(payload.body); // TODO: Should the server send the entire game state each time there is an update? NOOOO!!!
 
             // Do stuff?
 
-            this.drawGameBoard(gameState);
+            currentController.drawGameBoard(gameState);
 
         }
 
-        drawGameBoard(gameState) {
-            // TODO: Draw gameboard's current state
+        drawGameBoard(gameState: Models.GameState) {
+            this.gameState = gameState;
+            if (!this.gameState) return;
+            this.gameState.availableCards = [
+                {
+                    id: "Jack",
+                    src: "img/11CLUBS.png"
+                },
+                {
+                    id: "Queen",
+                    src: "img/12DIAMONDS.png"
+                },
+                {
+                    id: "King",
+                    src: "img/13CLUBS.png"
+                },
+                {
+                    id: "Ace",
+                    src: "img/1HEARTS.png"
+                }
+            ];
         }
 
         // makeMove(move) {

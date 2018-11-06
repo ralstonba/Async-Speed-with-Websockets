@@ -53,7 +53,7 @@
                 <div class="hand hhand-compact active-hand">
                     <img ui-draggable="true" drag="card"
                          on-drop-success="d.dropSuccessHandler($event,$index,d.availableCards)"
-                         ng-repeat="card in d.availableCards track by $index"
+                         ng-repeat="card in d.gamesState.availableCards track by $index"
                          class="card" alt="card{{$index}}" src="{{card.src}}"/>
                 </div>
             </div>
