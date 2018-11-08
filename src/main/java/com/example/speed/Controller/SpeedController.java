@@ -106,17 +106,26 @@ public class SpeedController {
     @MessageMapping("/game.stalemate")
     public void stalemate(@Header("simpSessionId") String sessionID) {
         speedInstance = SpeedInstance.getInstance();
+        int handCount;
         int count;
 
         Player player = speedInstance.getPlayerMap().get(sessionID);
         count = 0;
-        for (int i = 0; i < 5; i++) {
+        handCount = player.getHand().getSize();
+        
+        if(handCount != 5 && speedInstance.getDeck().getSize() != 0){
+            sendGameState(speedInstance);
+            return;
+        }
+        
+        for (int i = 0; i < handCount; i++) {
             if (player.getHand().getHand().get(i) != speedInstance.getPlayOptions()[0]
                     && player.getHand().getHand().get(i) != speedInstance.getPlayOptions()[1]) {
                 count++;
             }
         }
-        if (count == 5) {
+        
+        if (count == handCount) {
             player.setHandStale(true);
         }
 
@@ -129,6 +138,7 @@ public class SpeedController {
         }
         if (isGameStale) {
             speedInstance.setGameState(GameState.STALE);
+            sendGameState(speedInstance);
         }
     }
 
