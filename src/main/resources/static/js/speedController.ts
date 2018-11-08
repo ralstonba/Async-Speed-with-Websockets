@@ -45,6 +45,7 @@ namespace Assignment3750 {
                 array.splice(index, 1);
             }
             currentController.dropping = false;
+
         };
 
         onDrop($event, card: Models.Card, array: Models.Card[], stack: number) {
@@ -66,7 +67,8 @@ namespace Assignment3750 {
 
         onConnected() {
             currentController.stompClient.subscribe("/user/queue/reply", currentController.updateHandler); // Listen for updates to game state
-            currentController.drawGameBoard({} as any);
+            currentController.initGame();
+            //currentController.drawGameBoard({} as any);
         }
 
         onError(error) {

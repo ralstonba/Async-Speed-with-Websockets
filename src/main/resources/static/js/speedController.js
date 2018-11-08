@@ -56,7 +56,8 @@ var Assignment3750;
         };
         SpeedCtrl.prototype.onConnected = function () {
             Assignment3750.currentController.stompClient.subscribe("/user/queue/reply", Assignment3750.currentController.updateHandler); // Listen for updates to game state
-            Assignment3750.currentController.drawGameBoard({});
+            Assignment3750.currentController.initGame();
+            //currentController.drawGameBoard({} as any);
         };
         SpeedCtrl.prototype.onError = function (error) {
             // TODO: Take some action on connection error
