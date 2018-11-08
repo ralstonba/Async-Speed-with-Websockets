@@ -1,13 +1,23 @@
 var Models;
 (function (Models) {
     var Card = /** @class */ (function () {
-        function Card(rank, suit) {
-            this.rank = rank;
-            this.suit = suit;
-            this.suit = suit;
-            this.rank = rank;
-            this.src = this.srcUrlBuilder(rank, suit);
+        function Card(theRank, theSuit) {
+            this.theRank = theRank;
+            this.theSuit = theSuit;
+            this._suit = theSuit;
+            this._rank = theRank;
+            this.src = this.srcUrlBuilder(theRank, theSuit);
         }
+        Object.defineProperty(Card.prototype, "suit", {
+            get: function () {
+                return this._suit;
+            },
+            set: function (theSuit) {
+                this._suit = theSuit;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Card.prototype.srcUrlBuilder = function (rank, suit) {
             var ranks = ["ACE",
                 "TWO",
@@ -22,8 +32,24 @@ var Models;
                 "JACK",
                 "QUEEN",
                 "KING"];
-            "img/2SPADES.png";
             return "img/" + (ranks.indexOf(rank) + 1) + suit + ".png";
+        };
+        Object.defineProperty(Card.prototype, "rank", {
+            get: function () {
+                return this._rank;
+            },
+            set: function (theRank) {
+                this._rank = theRank;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Card.prototype.getJSON = function () {
+            var thisCard = {
+                suit: this._suit,
+                rank: this._rank
+            };
+            return JSON.stringify(thisCard);
         };
         return Card;
     }());
