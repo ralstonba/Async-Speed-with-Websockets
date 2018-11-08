@@ -10,119 +10,57 @@
     </style>
 </head>
 <body style="background-color:gray" ng-app="speedApp" ng-controller="SpeedCtrl" ng-cloak>
-<div class="container" style="background-color:green">
+<div class="container" style="background-color:green;min-height: 500px;padding-bottom:300px">
     <h1 style="text-align: center;: center; color:white">
         {{d.title}}
     </h1>
-    <div class="card-row">
-        <div class="row">
-            <!--<div class="col-xs-6">-->
-                <!--<div class="hand hhand-compact">-->
-                    <!--<img ng-repeat="card in d.oppCards track by $index"-->
-                         <!--class="card" alt="card{{$index}}" src="{{card.src}}"/>-->
-                <!--</div>-->
-            <!--</div>-->
-            <div class="col-xs-6" style="float:right">
-                <img class="card" alt="card10" src="img/BCard_Back.png"/>
+    <div ng-if="!d.gameState" class="loader">Waiting for player<span class="loader__dot">.</span><span
+            class="loader__dot">.</span><span
+            class="loader__dot">.</span></div>
+    <div id="game-play" ng-if="d.gameState">
+        <div class="card-row">
+            <div class="row">
+                <div class="col-xs-6 col-xs-offset-3">
+                    <img class="card" alt="card10" src="img/BCard_Back.png"/>
+                </div>
+            </div>
+        </div>
+        <div class="card-row">
+            <div class="row">
+                <div class="col-xs-3">
+                    <img class="card" alt="card0" src="img/BCard_Back.png"/>
+                </div>
+                <div class="col-xs-6" style="text-align: center;">
+                    <div style="float:left" ui-on-Drop="d.onDrop($event,$data,d.playedCards, d.gameState.playCard1, 1)">
+                        <img ui-draggable="false"
+                             class="card" alt="card{{$index}}" src="{{d.gameState.playCard1.src}}"/>
+                    </div>
+                    <div ui-on-Drop="d.onDrop($event,$data,d.playedCards, d.gameState.playCard2, 2)">
+                        <img ui-draggable="false"
+                             class="card" alt="card{{$index}}" src="{{d.gameState.playCard2.src}}"/>
+                    </div>
+                </div>
+                <div class="col-xs-3 hhand active-hand">
+                    <img ng-click="d.stale()" class="card" alt="card10" src="img/BCard_Back.png"/>
+                </div>
+            </div>
+        </div>
+        <div class="card-row">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="hand hhand-compact active-hand">
+                        <img ui-draggable="true" drag="card"
+                             on-drop-success="d.dropSuccessHandler($event,card)"
+                             ng-repeat="card in d.gameState.player.hand.cards"
+                             class="card" alt="card{{$index}}" src="{{card.src}}"/>
+                    </div>
+                </div>
+                <div class="col-xs-6 hhand active-hand" style="float:right">
+                    <img ng-click="d.drawCard()" class="card" alt="card10" src="img/BCard_Back.png"/>
+                </div>
             </div>
         </div>
     </div>
-    <div class="card-row">
-        <div class="row">
-            <div class="col-xs-3">
-                <img class="card" alt="card0" src="img/BCard_Back.png"/>
-            </div>
-            <div class="col-xs-6" style="text-align: center;">
-                <div style="float:left" ui-on-Drop="d.onDrop($event,$data,d.playedCards, 1)">
-                    <img ui-draggable="false"
-                         class="card" alt="card{{$index}}" src="{{d.playCard1.src}}"/>
-                </div>
-                <div ui-on-Drop="d.onDrop($event,$data,d.playedCards, 2)">
-                    <img ui-draggable="false"
-                         class="card" alt="card{{$index}}" src="{{d.playCard2.src}}"/>
-                </div>
-            </div>
-            <div class="col-xs-3">
-                <img class="card" alt="card10" src="img/BCard_Back.png"/>
-            </div>
-        </div>
-    </div>
-    <div class="card-row">
-        <div class="row">
-            <div class="col-xs-6">
-                <div class="hand hhand-compact active-hand">
-                    <img ui-draggable="true" drag="card"
-                         on-drop-success="d.dropSuccessHandler($event,$index,d.gameState.availableCards)"
-                         ng-repeat="card in d.gameState.availableCards track by $index"
-                         class="card" alt="card{{$index}}" src="{{card.src}}"/>
-                </div>
-            </div>
-            <div class="col-xs-6" style="float:right">
-                <img class="card" alt="card10" src="img/BCard_Back.png"/>
-            </div>
-        </div>
-    </div>
-    <!--<div class="row">-->
-    <!--<div class="col-md-6">-->
-    <!--<div class="hand hhand active-hand">-->
-    <!--<img class='card' alt="card1" src='img/2CLUBS.png'>-->
-    <!--<img class='card' alt="card2" src='img/3DIAMONDS.png'>-->
-    <!--<img class='card' alt="card3" src='img/1SPADES.png'>-->
-    <!--<img class='card' alt="card4" src='img/10HEARTS.png'>-->
-    <!--<img class='card' alt="card5" src='img/13CLUBS.png'>-->
-    <!--<img class='card' alt="card6" src='img/6SPADES.png'>-->
-    <!--<img class='card' alt="card7" src='img/12DIAMONDS.png'>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-
-    <!--<div class="row">-->
-    <!--<div class="col-md-6">-->
-    <!--<div class="hand hhand-compact active-hand">-->
-    <!--<img class='card' alt="card1" src='img/2CLUBS.png'>-->
-    <!--<img class='card' alt="card2" src='img/3DIAMONDS.png'>-->
-    <!--<img class='card' alt="card3" src='img/1SPADES.png'>-->
-    <!--<img class='card' alt="card4" src='img/10HEARTS.png'>-->
-    <!--<img class='card' alt="card5" src='img/13CLUBS.png'>-->
-    <!--<img class='card' alt="card6" src='img/6SPADES.png'>-->
-    <!--<img class='card' alt="card7" src='img/12DIAMONDS.png'>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-
-    <!--<div class="row">-->
-    <!--<div class="col-md-6">-->
-    <!--<div class="hand fan active-hand">-->
-    <!--<img class='card' alt="card1" src='img/2CLUBS.png'>-->
-    <!--<img class='card' alt="card2" src='img/3DIAMONDS.png'>-->
-    <!--<img class='card' alt="card3" src='img/1SPADES.png'>-->
-    <!--<img class='card' alt="card4" src='img/10HEARTS.png'>-->
-    <!--<img class='card' alt="card5" src='img/13CLUBS.png'>-->
-    <!--<img class='card' alt="card6" src='img/6SPADES.png'>-->
-    <!--<img class='card' alt="card7" src='img/12DIAMONDS.png'>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-
-    <!--<div class="row">-->
-    <!--<div class="col-md-6">-->
-    <!--<div class="hand vhand-compact active-hand">-->
-    <!--<img class='card' alt="card1" src='img/2CLUBS.png'>-->
-    <!--<img class='card' alt="card2" src='img/3DIAMONDS.png'>-->
-    <!--<img class='card' alt="card3" src='img/1SPADES.png'>-->
-    <!--<img class='card' alt="card4" src='img/10HEARTS.png'>-->
-    <!--<img class='card' alt="card5" src='img/13CLUBS.png'>-->
-    <!--<img class='card' alt="card6" src='img/6SPADES.png'>-->
-    <!--<img class='card' alt="card7" src='img/12DIAMONDS.png'>-->
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-
-    <!--<div class='hand' data-hand='flow: vertical; spacing: 0.01; width: 80; cards: BCard_Back, BCard_Back'>-->
-    <!--</div>-->
-
-    <!--<div class='hand' data-hand='flow: vertical; spacing: 0.01; width: 80; cards: RCard_Back, RCard_Back'>-->
-    <!--</div>-->
 </div>
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <link rel="stylesheet" href="css/speedDraggable.css">
@@ -134,6 +72,7 @@
 <script src="js/thirdParty/angular.min.js"></script>
 <script src="js/thirdParty/angularui_bootstrap.min.js"></script>
 <script src="js/thirdParty/dragndrop.js"></script>
+<script src="js/models/card.js"></script>
 <script src="js/speedController.js"></script>
 <!--<script src="/js/main.js"></script>-->
 </body>

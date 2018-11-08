@@ -1,13 +1,11 @@
 namespace Models{
     export interface GameState {
-        oppNumCardsHand: Number;            // Need to know how many cards to show in opp hand
-        oppNumCardsRemaining: Number;
+        oppNumCardsHand: number;            // Need to know how many cards to show in opp hand
+        oppNumCardsRemaining: number;
         oppHandStale: boolean
-        myHand: Array<Models.Card>;
-        myNumCardsRemaining: Number;
-        myHandStale: boolean;
         playCard1: Models.Card;
         playCard2: Models.Card;
-        availableCards: Models.Card[];
+        playOptions: Models.Card[];
+        player: Player;
     }
 }

@@ -3,8 +3,11 @@ namespace Models {
         cardsRemaining: number;
         drawPile: Card[];
         extraPile: Card[];
-        hand: Card[];
+        hand: { cards: Card[] };
         handStale: boolean;
         playerID: string;
+        myHand: Array<Card>;
+        myNumCardsRemaining: number;
+        myHandStale: boolean;
     }
 }

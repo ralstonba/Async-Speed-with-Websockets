@@ -5,49 +5,32 @@ var Assignment3750;
         function SpeedCtrl($scope) {
             this.$scope = $scope;
             this.title = "Welcome to the wonderful world of SPEED";
-            this.playedCards = [];
-            this.oppCards = [
-                {
-                    id: "x1",
-                    src: "img/9HEARTS.png"
-                },
-                {
-                    id: "x2",
-                    src: "img/7SPADES.png"
-                },
-                {
-                    id: "x3",
-                    src: "img/5SPADES.png"
-                },
-                {
-                    id: "x4",
-                    src: "img/10CLUBS.png"
-                }
-            ];
             this.dropping = false;
-            this.addText = "";
+            this.playedCards = [];
             $scope["d"] = this;
             this.connect();
-            this.playCard1 = { id: "first", src: "img/10SPADES.png" };
-            this.playCard2 = { id: "second", src: "img/2SPADES.png" };
             Assignment3750.currentController = this;
         }
-        SpeedCtrl.prototype.dropSuccessHandler = function ($event, index, array) {
+        //Event for when card is dropped successfully
+        SpeedCtrl.prototype.dropSuccessHandler = function ($event, card) {
             if (Assignment3750.currentController.dropping) {
-                array.splice(index, 1);
+                Assignment3750.currentController.gameState.player.hand.cards = Assignment3750.currentController.gameState.player.hand.cards.filter(function (c) { return c.src !== card.src; });
             }
             Assignment3750.currentController.dropping = false;
         };
         ;
-        SpeedCtrl.prototype.onDrop = function ($event, card, array, stack) {
+        //Notify scope of card drop
+        SpeedCtrl.prototype.onDrop = function ($event, card, array, stack, index) {
             array.push(card);
-            if (stack === 1)
-                Assignment3750.currentController.playCard1 = card;
+            if (index === 1)
+                Assignment3750.currentController.gameState.playCard1 = card;
             else
-                Assignment3750.currentController.playCard2 = card;
+                Assignment3750.currentController.gameState.playCard2 = card;
+            Assignment3750.currentController.playCard(card, stack);
             Assignment3750.currentController.dropping = true;
         };
         ;
+        //Connect to web socket
         SpeedCtrl.prototype.connect = function () {
             var socket = new SockJS("/ws");
             this.stompClient = Stomp.over(socket);
@@ -68,69 +51,46 @@ var Assignment3750;
             // Do stuff?
             Assignment3750.currentController.drawGameBoard(gameState);
         };
+        //Sets game state and parses cards
         SpeedCtrl.prototype.drawGameBoard = function (gameState) {
             this.gameState = gameState;
             if (!this.gameState)
                 return;
-            this.gameState.availableCards = [
-                {
-                    id: "Jack",
-                    src: "img/11CLUBS.png"
-                },
-                {
-                    id: "Queen",
-                    src: "img/12DIAMONDS.png"
-                },
-                {
-                    id: "King",
-                    src: "img/13CLUBS.png"
-                },
-                {
-                    id: "Ace",
-                    src: "img/1HEARTS.png"
-                }
-            ];
+            var playCard1 = gameState.playCard1, playCard2 = gameState.playCard2, playOptions = gameState.playOptions, player = gameState.player;
+            if (playOptions && playOptions.length > 1) {
+                this.gameState.playCard1 = new Models.Card(playOptions[0].rank, playOptions[0].suit);
+                this.gameState.playCard2 = new Models.Card(playOptions[1].rank, playOptions[1].suit);
+            }
+            this.gameState.player.hand.cards = player.hand.cards.map(function (c) { return new Models.Card(c.rank, c.suit); });
             this.$scope.$apply();
         };
-        // makeMove(move) {
-        //     /*
-        //         TODO: Decide on move encoding, capture onHover events?
-        //            {card: Card, destination: Index}
-        //     */
-        //
-        //     //let move = null; // Create valid move object
-        //     if (move && this.stompClient) {
-        //         let command = {
-        //             sender: null,   // TODO: Need to identify players, use session ID?
-        //             move: move,
-        //             type: PLAY
-        //         };
-        //         this.stompClient.send("/rest/api/game.playCard", {}, JSON.stringify(command));
-        //     }
-        //     //event.preventDefault();
-        // }
         SpeedCtrl.prototype.drawCard = function () {
             var endpoint = "/speed/game.drawCard";
             if (this.stompClient) {
                 this.stompClient.send(endpoint, {}, JSON.stringify(""));
             }
-            //event.preventDefault()
+        };
+        SpeedCtrl.prototype.stale = function () {
+            var endpoint = "/speed/game.stalemate";
+            if (this.stompClient) {
+                this.stompClient.send(endpoint, {}, JSON.stringify(""));
+            }
         };
         SpeedCtrl.prototype.initGame = function () {
             var endpoint = "/speed/game.init";
             if (this.stompClient) {
                 this.stompClient.send(endpoint, {}, JSON.stringify(""));
             }
-            //event.preventDefault()
         };
         SpeedCtrl.prototype.playCard = function (card, target) {
+            //Todo: Make it work?
             var endpoint = "/speed/game.playCard";
             var request = {
-                target: target,
-                source: card
+                destination: { suit: target.suit, rank: target.rank },
+                source: { suit: card._suit, rank: card._rank }
             };
             if (this.stompClient) {
-                this.stompClient.send(endpoint, {}, JSON.stringify(target));
+                this.stompClient.send(endpoint, {}, JSON.stringify(request));
             }
         };
         return SpeedCtrl;
