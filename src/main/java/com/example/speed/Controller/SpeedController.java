@@ -246,9 +246,11 @@ public class SpeedController {
             if (player.getHand().getHand().remove(cardToPlay)) {
                 logger.debug("The source card was successfully removed from the players hand");
 
-                for (Card card : thisGameState.getPlayOptions()) {
-                    if (card.equals(cardMove.getDestination())) {
-                        card = cardMove.getSource();
+                Card[] playOptions = thisGameState.getPlayOptions();
+
+                for (int i = 0; i < playOptions.length; i++) {
+                    if (playOptions[i].equals(cardMove.getDestination())) {
+                        playOptions[i] = cardToPlay;
                     }
                 }
 
