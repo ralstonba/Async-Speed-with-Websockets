@@ -136,8 +136,19 @@ public class SpeedController {
                 break;
             }
         }
+        
         if (isGameStale) {
             speedInstance.setGameState(GameState.STALE);
+            Card c = speedInstance.getPlayerMap().get(sessionID).getExtraPile().pop();
+            speedInstance.getPlayOptions()[0] = c;
+            
+        for (String id : speedInstance.getPlayerMap().keySet()) {
+            if (id != sessionID) {
+                Card c2 = speedInstance.getPlayerMap().get(id).getExtraPile().pop();
+                speedInstance.getPlayOptions()[1] = c2;
+            break;
+            }
+        } 
             sendGameState(speedInstance);
         }
     }
