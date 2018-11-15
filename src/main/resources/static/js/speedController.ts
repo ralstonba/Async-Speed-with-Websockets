@@ -116,7 +116,7 @@ namespace Assignment3750 {
         }
     }
 
-    let app = angular.module("speedApp", ["ang-drag-drop"]);
+    let app = angular.module("speedApp", ["ang-drag-drop", "transition-card"]);
     app.controller("SpeedCtrl", SpeedCtrl);
 }
 

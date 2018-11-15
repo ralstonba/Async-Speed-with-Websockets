@@ -19,6 +19,12 @@
             class="loader__dot">.</span></div>
     <div id="game-play" ng-if="d.gameState">
         <div class="card-row">
+            <div>
+                <h3 style="text-overflow: ellipsis;">Your Dirty Opponent has {{d.gameState.opponentHandSize +
+                    d.gameState.opponentDeckSize}} remaining cards. You better not lose.</h3>
+            </div>
+        </div>
+        <div class="card-row">
             <div class="row">
                 <div class="col-xs-6 col-xs-offset-3">
                     <img class="card" alt="card10" src="img/BCard_Back.png"/>
@@ -35,13 +41,15 @@
                         <img ui-draggable="false"
                              class="card" alt="card{{$index}}" src="{{d.gameState.playCard1.src}}"/>
                     </div>
-                    <div ui-on-Drop="d.onDrop($event,$data,d.playedCards, d.gameState.playCard2, 2)">
+                    <div ui-on-Drop="d.onDrop($event,$data,d.playedCards, d.gameState.playCard2, 2)"
+                         style="float: right">
                         <img ui-draggable="false"
                              class="card" alt="card{{$index}}" src="{{d.gameState.playCard2.src}}"/>
                     </div>
                 </div>
-                <div class="col-xs-3 hhand active-hand">
-                    <img ng-click="d.stale()" class="card" alt="card10" src="img/BCard_Back.png"/>
+                <div class="col-xs-3 hhand"
+                     ng-class="{'active-hand':!d.gameState.player.handStale, 'disabled-hand': d.gameState.player.handStale}">
+                    <img ng-click="d.stale()" class="card" alt="card10" src="img/BCard_Back.png" style="float:right"/>
                 </div>
             </div>
         </div>
@@ -56,7 +64,7 @@
                     </div>
                 </div>
                 <div class="col-xs-6 hhand active-hand" style="float:right">
-                    <img ng-click="d.drawCard()" class="card" alt="card10" src="img/BCard_Back.png"/>
+                    <img trans-card ng-click="d.drawCard()" class="card" alt="card10" src="img/BCard_Back.png"/>
                 </div>
             </div>
         </div>
@@ -72,6 +80,7 @@
 <script src="js/thirdParty/angular.min.js"></script>
 <script src="js/thirdParty/angularui_bootstrap.min.js"></script>
 <script src="js/thirdParty/dragndrop.js"></script>
+<script src="js/directives/transitionCard.js"></script>
 <script src="js/models/card.js"></script>
 <script src="js/speedController.js"></script>
 <!--<script src="/js/main.js"></script>-->
