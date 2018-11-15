@@ -20,8 +20,8 @@
     <div id="game-play" ng-if="d.gameState">
         <div class="card-row">
             <div>
-                <h3 style="text-overflow: ellipsis;">Your Dirty Opponent has {{d.gameState.opponentHandSize +
-                    d.gameState.opponentDeckSize}} remaining cards. You better not lose.</h3>
+                <h3 style="text-overflow: ellipsis;">Your Opponent has {{d.gameState.opponentHandSize +
+                    d.gameState.opponentDeckSize}} remaining cards.</h3>
             </div>
         </div>
         <div class="card-row">
@@ -66,6 +66,11 @@
                 <div class="col-xs-6 hhand active-hand" style="float:right" ng-if="d.gameState.player.drawPile.cards.length">
                     <img trans-card ng-click="d.drawCard()" class="card" alt="card10" src="img/BCard_Back.png"/>
                 </div>
+            </div>
+        </div>
+        <div class="card-row">
+            <div>
+                <h3 style="text-overflow: ellipsis;">You have {{d.gameState.player.cardsRemaining}} remaining cards.</h3>
             </div>
         </div>
     </div>

@@ -57,4 +57,8 @@ public class Player {
     public int getCardsRemaining() {
         return hand.getSize() + drawPile.getSize();
     }
+
+    public void setCardsRemaining(int cardsRemaining) {
+        this.cardsRemaining = cardsRemaining;
+    }
 }
