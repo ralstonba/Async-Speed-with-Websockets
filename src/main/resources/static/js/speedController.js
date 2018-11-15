@@ -73,6 +73,7 @@ var Assignment3750;
         SpeedCtrl.prototype.stale = function () {
             var endpoint = "/speed/game.stalemate";
             if (this.stompClient) {
+                this.gameState.player.handStale = true;
                 this.stompClient.send(endpoint, {}, JSON.stringify(""));
             }
         };
