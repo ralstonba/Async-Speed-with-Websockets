@@ -119,8 +119,10 @@ public class SpeedController {
         }
         
         for (int i = 0; i < handCount; i++) {
-            if (player.getHand().getHand().get(i) != speedInstance.getPlayOptions()[0]
-                    && player.getHand().getHand().get(i) != speedInstance.getPlayOptions()[1]) {
+            if (player.getHand().getHand().get(i).getRank().ordinal() != speedInstance.getPlayOptions()[0].getRank().ordinal() - 1
+                    && player.getHand().getHand().get(i).getRank().ordinal() != speedInstance.getPlayOptions()[0].getRank().ordinal() + 1
+                    && player.getHand().getHand().get(i).getRank().ordinal() != speedInstance.getPlayOptions()[1].getRank().ordinal() - 1
+                    && player.getHand().getHand().get(i).getRank().ordinal() != speedInstance.getPlayOptions()[1].getRank().ordinal() + 1) {
                 count++;
             }
         }
@@ -141,11 +143,14 @@ public class SpeedController {
             speedInstance.setGameState(GameState.STALE);
             Card c = speedInstance.getPlayerMap().get(sessionID).getExtraPile().pop();
             speedInstance.getPlayOptions()[0] = c;
+            speedInstance.setGameState(GameState.IN_PROGRESS);
+            player.setHandStale(false);
             
         for (String id : speedInstance.getPlayerMap().keySet()) {
             if (id != sessionID) {
                 Card c2 = speedInstance.getPlayerMap().get(id).getExtraPile().pop();
                 speedInstance.getPlayOptions()[1] = c2;
+                speedInstance.getPlayerMap().get(id).setHandStale(false);
             break;
             }
         } 
