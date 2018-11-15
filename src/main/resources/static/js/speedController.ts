@@ -92,6 +92,7 @@ namespace Assignment3750 {
         stale() {
             const endpoint = "/speed/game.stalemate";
             if (this.stompClient) {
+                this.gameState.player.handStale = true;
                 this.stompClient.send(endpoint, {}, JSON.stringify(""));
             }
         }

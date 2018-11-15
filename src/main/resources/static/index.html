@@ -63,7 +63,7 @@
                              class="card" alt="card{{$index}}" src="{{card.src}}"/>
                     </div>
                 </div>
-                <div class="col-xs-6 hhand active-hand" style="float:right">
+                <div class="col-xs-6 hhand active-hand" style="float:right" ng-if="d.gameState.player.drawPile.cards.length">
                     <img trans-card ng-click="d.drawCard()" class="card" alt="card10" src="img/BCard_Back.png"/>
                 </div>
             </div>
