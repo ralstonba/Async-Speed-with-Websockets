@@ -57,6 +57,7 @@ public class SpeedController {
                     player.getHand().addCard(player.getDrawPile().dealCard());
                 }
             }
+            
             speedInstance.setGameState(GameState.IN_PROGRESS);
             sendGameState(speedInstance);
         }
@@ -138,7 +139,7 @@ public class SpeedController {
             }
         }
 
-        if (isGameStale) {
+        if (isGameStale && speedInstance.getPlayerMap().get(sessionID).getDrawPile().getSize() != 0) {
             speedInstance.setGameState(GameState.STALE);
             Card c = speedInstance.getPlayerMap().get(sessionID).getExtraPile().pop();
             speedInstance.getPlayOptions()[0] = c;

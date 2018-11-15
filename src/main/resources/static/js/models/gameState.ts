@@ -7,5 +7,6 @@ namespace Models{
         playCard2: Models.Card;
         playOptions: Models.Card[];
         player: Player;
+        
     }
 }
