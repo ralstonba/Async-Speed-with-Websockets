@@ -69,32 +69,31 @@ public class SpeedController {
         speedInstance = SpeedInstance.getInstance();
         logger.debug("playCard endpoint hit by user with sessionID: {}", sessionID);
 
-        if (sessionID != null) {
+        if (speedInstance.getGameState() == GameState.IN_PROGRESS) {
+            if (sessionID != null) {
 
-            if (validatePlayerMove(speedInstance, cardMove, sessionID)) {
-                logger.info("playCard request from {} valid", sessionID);
-                playCardHelper(speedInstance, cardMove, sessionID);
+                if (validatePlayerMove(speedInstance, cardMove, sessionID)) {
+                    logger.info("playCard request from {} valid", sessionID);
+                    playCardHelper(speedInstance, cardMove, sessionID);
+                } else {
+                    logger.info("playCard request from {} invalid, REJECTED", sessionID);
+                }
+
+                if (checkWinner(speedInstance, sessionID)) {
+                    speedInstance.setGameState(GameState.COMPLETE);
+                }
             } else {
-                logger.info("playCard request from {} invalid, REJECTED", sessionID);
+                logger.debug("playCard request from unknown sessionID, REJECTED");
             }
-
-        } else {
-            logger.debug("playCard request from unknown sessionID, REJECTED");
         }
-
-        if (checkWinner(speedInstance, sessionID)) {
-            speedInstance.setGameState(GameState.COMPLETE);
-            sendGameState(speedInstance);
-        } else {
-            sendGameState(speedInstance);
-        }
+        sendGameState(speedInstance);
     }
 
     @MessageMapping("/game.drawCard")
     public void drawCard(@Header("simpSessionId") String sessionID) {
         speedInstance = SpeedInstance.getInstance();
         Map playerMap = speedInstance.getPlayerMap();
-        if (playerMap.containsKey(sessionID)) {
+        if (playerMap.containsKey(sessionID) && speedInstance.getGameState() == GameState.IN_PROGRESS) {
             Player player = (Player) playerMap.get(sessionID);
             Hand hand = player.getHand();
             Deck deck = player.getDrawPile();
@@ -114,19 +113,21 @@ public class SpeedController {
         Player player = speedInstance.getPlayerMap().get(sessionID);
         count = 0;
         handCount = player.getHand().getSize();
-        
-        if(handCount != 5 && speedInstance.getDeck().getSize() != 0){
+
+        if (handCount != 5 && speedInstance.getDeck().getSize() != 0) {
             sendGameState(speedInstance);
             return;
         }
-        
+
         for (int i = 0; i < handCount; i++) {
-            if (player.getHand().getHand().get(i) != speedInstance.getPlayOptions()[0]
-                    && player.getHand().getHand().get(i) != speedInstance.getPlayOptions()[1]) {
+            if (player.getHand().getHand().get(i).getRank().ordinal() != speedInstance.getPlayOptions()[0].getRank().ordinal() - 1
+                    && player.getHand().getHand().get(i).getRank().ordinal() != speedInstance.getPlayOptions()[0].getRank().ordinal() + 1
+                    && player.getHand().getHand().get(i).getRank().ordinal() != speedInstance.getPlayOptions()[1].getRank().ordinal() - 1
+                    && player.getHand().getHand().get(i).getRank().ordinal() != speedInstance.getPlayOptions()[1].getRank().ordinal() + 1) {
                 count++;
             }
         }
-        
+
         if (count == handCount) {
             player.setHandStale(true);
         }
@@ -138,8 +139,22 @@ public class SpeedController {
                 break;
             }
         }
+
         if (isGameStale) {
             speedInstance.setGameState(GameState.STALE);
+            Card c = speedInstance.getPlayerMap().get(sessionID).getExtraPile().pop();
+            speedInstance.getPlayOptions()[0] = c;
+            speedInstance.setGameState(GameState.IN_PROGRESS);
+            player.setHandStale(false);
+
+            for (String id : speedInstance.getPlayerMap().keySet()) {
+                if (id != sessionID) {
+                    Card c2 = speedInstance.getPlayerMap().get(id).getExtraPile().pop();
+                    speedInstance.getPlayOptions()[1] = c2;
+                    speedInstance.getPlayerMap().get(id).setHandStale(false);
+                    break;
+                }
+            }
             sendGameState(speedInstance);
         }
     }
@@ -152,7 +167,6 @@ public class SpeedController {
                 Player newPlayer = new Player();
                 newPlayer.init(sessionID);
                 playerMap.put(sessionID, newPlayer);
-                //sendGameState(speedInstance);
                 return true;
             }
         }
@@ -164,6 +178,7 @@ public class SpeedController {
         Map playerMap = speedInstance.getPlayerMap();
         if (playerMap.containsKey(sessionID)) {
             playerMap.remove(sessionID);
+            speedInstance.setGameState(GameState.AWAITING_PLAYERS);
             return true;
         }
         return false;

@@ -4,6 +4,9 @@ public class Action {
     private Card source;
     private Card destination;
 
+    public Action() {
+    }
+
     public Card getSource() {
         return source;
     }

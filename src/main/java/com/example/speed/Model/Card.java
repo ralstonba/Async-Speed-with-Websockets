@@ -4,12 +4,15 @@ import com.google.gson.Gson;
 
 public class Card {
 
-    private final Suit suit;
-    private final Rank rank;
+    private Suit suit;
+    private Rank rank;
 
     public Card(Suit suit, Rank rank) {
         this.suit = suit;
         this.rank = rank;
+    }
+
+    public Card() {
     }
 
     public Suit getSuit() {
@@ -18,6 +21,14 @@ public class Card {
 
     public Rank getRank() {
         return rank;
+    }
+
+    public void setSuit(Suit suit) {
+        this.suit = suit;
+    }
+
+    public void setRank(Rank rank) {
+        this.rank = rank;
     }
 
     public String getJSON() {
