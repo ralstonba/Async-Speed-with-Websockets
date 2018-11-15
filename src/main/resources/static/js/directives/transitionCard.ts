@@ -6,6 +6,7 @@ namespace Directives {
             var me = this;
             setTimeout(()=>{
                 me.showCard = true;
+                this.$scope.$apply();
             }, 1000);
         }
 

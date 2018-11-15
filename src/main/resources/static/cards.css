@@ -1,5 +1,5 @@
 img.card {
-	width: 70px;
+	width: 120px;
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -57,7 +57,7 @@ img.card {
 	padding-top: 10px;
 }
 .hhand-compact img.card { 
-	margin-left: -52px;
+	margin-left: -95px;
 	padding-top: 10px;
 }
 .hhand-compact.active-hand img.card:hover { 
