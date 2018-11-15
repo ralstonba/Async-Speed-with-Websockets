@@ -45,6 +45,7 @@ public class SpeedController {
             // Deal to players
             Collection<Player> players = speedInstance.getPlayerMap().values();
             for (Player player : players) {
+                player.init();
                 for (int i = 0; i < 5; i++) {
                     player.getExtraPile().push(deck.dealCard());
                 }
@@ -165,8 +166,7 @@ public class SpeedController {
         Map playerMap = speedInstance.getPlayerMap();
         if (playerMap.size() < 2) {
             if (!playerMap.containsKey(sessionID)) {
-                Player newPlayer = new Player();
-                newPlayer.init(sessionID);
+                Player newPlayer = new Player(sessionID);
                 playerMap.put(sessionID, newPlayer);
                 return true;
             }

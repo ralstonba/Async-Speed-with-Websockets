@@ -9,13 +9,15 @@ public class Player {
     private boolean handStale;
     private int cardsRemaining;
 
-    public void init(String playerID) {
+    public Player(String playerID) {
         this.playerID = playerID;
+    }
+
+    public void init() {
         this.drawPile = new Deck();
         this.extraPile = new Pile();
         this.hand = new Hand();
         this.handStale = false;
-        this.cardsRemaining = getCardsRemaining();
     }
 
     public String getPlayerID() {
