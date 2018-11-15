@@ -38,6 +38,9 @@ public class WebSocketEventListener {
             // TODO: do some checking to make sure the disconnected user was not a player
         } else {
             logger.info("Websocket disconnection, SessionID: " + sessionID);
+            SpeedController speedController = SpeedInstance.getInstance().getSpeedController();
+
+            speedController.removePlayer(sessionID);
         }
     }
 }
