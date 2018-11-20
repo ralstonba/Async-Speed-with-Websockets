@@ -24,7 +24,7 @@ public class SpeedController {
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
-
+    
     @MessageMapping("/game.init")
     public void initGame() {
         speedInstance = SpeedInstance.getInstance();
@@ -161,8 +161,10 @@ public class SpeedController {
             return;
         }
 
-//        if (isGameStale && speedInstance.getPlayerMap().get(sessionID).getDrawPile().getSize() != 0) {
-        if (isGameStale) {
+        if (isGameStale && (speedInstance.getPlayerMap().get(sessionID).getDrawPile().getSize() != 0 ||
+                speedInstance.getPlayerMap().get(sessionID).getDrawPile().getSize() == 0
+                        && speedInstance.getPlayerMap().get(sessionID).getHand().getHand().size() > 0)) {
+
             speedInstance.setGameState(GameState.STALE);
             Card c = speedInstance.getPlayerMap().get(sessionID).getExtraPile().pop();
             speedInstance.getPlayOptions()[0] = c;
@@ -178,8 +180,9 @@ public class SpeedController {
                 }
             }
 
-            sendGameState(speedInstance);
+
         }
+        sendGameState(speedInstance);
     }
 
     public boolean addPlayer(@NotNull String sessionID) {
