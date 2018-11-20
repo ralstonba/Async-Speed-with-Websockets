@@ -18,7 +18,7 @@
             class="loader__dot">.</span><span
             class="loader__dot">.</span></div>
     <div ng-if="d.gameState.player.didWin" class="loader">Winner!!!</div>
-    <div ng-if="!d.gameState.player.didWin && d.gameState.state === d.state.complete" class="loader">You loser. You lost.</div>
+    <div ng-if="!d.gameState.player.didWin && d.gameState.gameState === d.state.complete" class="loader">You loser. You lost.</div>
     <div id="game-play" ng-if="d.gameState">
         <div class="card-row">
             <div>
