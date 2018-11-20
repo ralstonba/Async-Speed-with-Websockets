@@ -304,6 +304,7 @@ public class SpeedController {
 
     private boolean checkWinner(SpeedInstance thisGameState, String sessionID) {
         Player thisPlayer = thisGameState.getPlayerMap().get(sessionID);
+        speedInstance.getPlayerMap().get(sessionID).setDidWin(true);
 
         return thisPlayer.getCardsRemaining() == 0 && thisGameState.getGameState() == GameState.IN_PROGRESS;
     }
