@@ -9,5 +9,6 @@ namespace Models {
         myHand: Array<Card>;
         myNumCardsRemaining: number;
         myHandStale: boolean;
+        didWin: boolean;
     }
 }

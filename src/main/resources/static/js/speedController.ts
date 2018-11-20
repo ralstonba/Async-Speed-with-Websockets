@@ -11,7 +11,7 @@ namespace Assignment3750 {
         gameState: Models.GameState;
         playedCards: Models.Card[] = [];
 
-        constructor(private $scope: ng.IScope) {
+        constructor(private $scope: ng.IScope, public state: string) {
             $scope["d"] = this;
             this.connect();
             currentController = this;
@@ -119,6 +119,13 @@ namespace Assignment3750 {
 
     let app = angular.module("speedApp", ["ang-drag-drop", "transition-card"]);
     app.controller("SpeedCtrl", SpeedCtrl);
+    let State = {
+        awaiting: "AWAITING_PLAYERS",
+        inProgress: "IN_PROGRESS",
+        stale: "STALE",
+        complete: "COMPLETE"
+    }
+    app.value("state", State)
 }
 
 declare var SockJS: any;

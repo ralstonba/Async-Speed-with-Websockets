@@ -2,8 +2,9 @@
 var Assignment3750;
 (function (Assignment3750) {
     var SpeedCtrl = /** @class */ (function () {
-        function SpeedCtrl($scope) {
+        function SpeedCtrl($scope, state) {
             this.$scope = $scope;
+            this.state = state;
             this.title = "Welcome to the wonderful world of SPEED";
             this.dropping = false;
             this.playedCards = [];
@@ -99,5 +100,12 @@ var Assignment3750;
     Assignment3750.SpeedCtrl = SpeedCtrl;
     var app = angular.module("speedApp", ["ang-drag-drop", "transition-card"]);
     app.controller("SpeedCtrl", SpeedCtrl);
+    var State = {
+        awaiting: "AWAITING_PLAYERS",
+        inProgress: "IN_PROGRESS",
+        stale: "STALE",
+        complete: "COMPLETE"
+    };
+    app.value("state", State);
 })(Assignment3750 || (Assignment3750 = {}));
 //# sourceMappingURL=speedController.js.map
