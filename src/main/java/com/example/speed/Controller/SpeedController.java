@@ -162,7 +162,8 @@ public class SpeedController {
             return;
         }
 
-        if (isGameStale && speedInstance.getPlayerMap().get(sessionID).getDrawPile().getSize() != 0) {
+//        if (isGameStale && speedInstance.getPlayerMap().get(sessionID).getDrawPile().getSize() != 0) {
+          if(isGameStale){
             speedInstance.setGameState(GameState.STALE);
             Card c = speedInstance.getPlayerMap().get(sessionID).getExtraPile().pop();
             speedInstance.getPlayOptions()[0] = c;
@@ -320,7 +321,7 @@ public class SpeedController {
             String opponentId = "";
 
             for (String id : speedInstance.getPlayerMap().keySet()) { // loop through both players
-                if (id.equals(sessionID)) { //opponent
+                if (!id.equals(sessionID)) { //opponent
                     opponentId = id;
                     opponentHandCount = speedInstance.getPlayerMap().get(id).getHand().getSize();
                     opponentDrawCount = speedInstance.getPlayerMap().get(id).getDrawPile().getSize();
