@@ -13,6 +13,7 @@ public class SanitizedGameState {
 
     public SanitizedGameState(String playerID, SpeedInstance speed) {
         this.player = speed.getPlayerMap().get(playerID);
+        speed.getPlayerMap().get(playerID).setCardsRemaining(speed.getPlayerMap().get(playerID).getCardsRemaining());
         this.playOptions = speed.getPlayOptions();
         this.gameState = speed.getGameState();
         for (String id : speed.getPlayerMap().keySet()) {

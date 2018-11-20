@@ -23,6 +23,10 @@ public class Pile {
         cards.push(card);
     }
 
+    public Stack<Card> getCardPile(){
+        return cards;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

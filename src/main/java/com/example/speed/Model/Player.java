@@ -8,14 +8,18 @@ public class Player {
     private Hand hand;
     private boolean handStale;
     private int cardsRemaining;
+    private boolean didWin;
 
-    public void init(String playerID) {
+    public Player(String playerID) {
         this.playerID = playerID;
+    }
+
+    public void init() {
         this.drawPile = new Deck();
         this.extraPile = new Pile();
         this.hand = new Hand();
         this.handStale = false;
-        this.cardsRemaining = getCardsRemaining();
+        this.didWin = false;
     }
 
     public String getPlayerID() {
@@ -57,4 +61,12 @@ public class Player {
     public int getCardsRemaining() {
         return hand.getSize() + drawPile.getSize();
     }
+
+    public void setCardsRemaining(int cardsRemaining) {
+        this.cardsRemaining = cardsRemaining;
+    }
+
+    public void setDidWin(boolean didWin){this.didWin = didWin;}
+
+    public boolean getDidWin(){return this.didWin;}
 }

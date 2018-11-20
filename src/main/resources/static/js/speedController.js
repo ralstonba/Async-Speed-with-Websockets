@@ -73,6 +73,7 @@ var Assignment3750;
         SpeedCtrl.prototype.stale = function () {
             var endpoint = "/speed/game.stalemate";
             if (this.stompClient) {
+                this.gameState.player.handStale = true;
                 this.stompClient.send(endpoint, {}, JSON.stringify(""));
             }
         };
@@ -96,7 +97,7 @@ var Assignment3750;
         return SpeedCtrl;
     }());
     Assignment3750.SpeedCtrl = SpeedCtrl;
-    var app = angular.module("speedApp", ["ang-drag-drop"]);
+    var app = angular.module("speedApp", ["ang-drag-drop", "transition-card"]);
     app.controller("SpeedCtrl", SpeedCtrl);
 })(Assignment3750 || (Assignment3750 = {}));
 //# sourceMappingURL=speedController.js.map

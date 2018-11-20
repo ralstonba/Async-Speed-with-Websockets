@@ -92,6 +92,7 @@ namespace Assignment3750 {
         stale() {
             const endpoint = "/speed/game.stalemate";
             if (this.stompClient) {
+                this.gameState.player.handStale = true;
                 this.stompClient.send(endpoint, {}, JSON.stringify(""));
             }
         }
@@ -116,7 +117,7 @@ namespace Assignment3750 {
         }
     }
 
-    let app = angular.module("speedApp", ["ang-drag-drop"]);
+    let app = angular.module("speedApp", ["ang-drag-drop", "transition-card"]);
     app.controller("SpeedCtrl", SpeedCtrl);
 }
 
