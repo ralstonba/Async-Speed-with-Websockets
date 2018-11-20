@@ -1,4 +1,4 @@
-namespace Models{
+namespace Models {
     export interface GameState {
         opponentDeckSize: number;            // Need to know how many cards to show in opp hand
         opponentHandSize: number;
@@ -7,6 +7,6 @@ namespace Models{
         playCard2: Models.Card;
         playOptions: Models.Card[];
         player: Player;
-        
+        gameState: string;
     }
 }
