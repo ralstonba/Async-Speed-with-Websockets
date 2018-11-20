@@ -24,7 +24,7 @@ public class SpeedController {
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
-    
+
     @MessageMapping("/game.init")
     public void initGame() {
         speedInstance = SpeedInstance.getInstance();
@@ -58,11 +58,10 @@ public class SpeedController {
                     player.getHand().addCard(player.getDrawPile().dealCard());
                 }
             }
-            
+
             speedInstance.setGameState(GameState.IN_PROGRESS);
             sendGameState(speedInstance);
-        }
-        else
+        } else
             sendGameState(speedInstance);
     }
 
@@ -84,11 +83,11 @@ public class SpeedController {
 
                 // check if a player has won by playing all cards
                 if (checkWinner(speedInstance, sessionID)) {
-                        speedInstance.setGameState(GameState.COMPLETE);
+                    speedInstance.setGameState(GameState.COMPLETE);
                 }
 
                 //check for stale game winner
-                if(speedInstance.getGameState() != GameState.COMPLETE){
+                if (speedInstance.getGameState() != GameState.COMPLETE) {
                     checkStaleWinner(sessionID);
                 }
 
@@ -151,19 +150,21 @@ public class SpeedController {
             }
         }
 
-        if(isGameStale == true){
+        if (isGameStale == true) {
             speedInstance.setGameState(GameState.STALE);
         }
 
         //check if there is a stale game winner
         checkStaleWinner(sessionID);
-        if(speedInstance.getGameState() == GameState.COMPLETE){
+        if (speedInstance.getGameState() == GameState.COMPLETE) {
             sendGameState(speedInstance);
             return;
         }
 
-//        if (isGameStale && speedInstance.getPlayerMap().get(sessionID).getDrawPile().getSize() != 0) {
-          if(isGameStale){
+        if (isGameStale && (speedInstance.getPlayerMap().get(sessionID).getDrawPile().getSize() != 0 ||
+                speedInstance.getPlayerMap().get(sessionID).getDrawPile().getSize() == 0
+                        && speedInstance.getPlayerMap().get(sessionID).getHand().getHand().size() > 0)) {
+
             speedInstance.setGameState(GameState.STALE);
             Card c = speedInstance.getPlayerMap().get(sessionID).getExtraPile().pop();
             speedInstance.getPlayOptions()[0] = c;
@@ -179,8 +180,9 @@ public class SpeedController {
                 }
             }
 
-            sendGameState(speedInstance);
+
         }
+        sendGameState(speedInstance);
     }
 
     public boolean addPlayer(@NotNull String sessionID) {
@@ -309,12 +311,12 @@ public class SpeedController {
         return thisPlayer.getCardsRemaining() == 0 && thisGameState.getGameState() == GameState.IN_PROGRESS;
     }
 
-    private void checkStaleWinner(String sessionID){
+    private void checkStaleWinner(String sessionID) {
         //check for stale win
         Player thisPlayer = speedInstance.getPlayerMap().get(sessionID);  //get player
         Pile thisPlayerExtraPile = thisPlayer.getExtraPile();  //get players extra pile
 
-        if(thisPlayerExtraPile.getCardPile().isEmpty() && speedInstance.getGameState() == GameState.STALE){ //check stack for empty extra pile
+        if (thisPlayerExtraPile.getCardPile().isEmpty() && speedInstance.getGameState() == GameState.STALE) { //check stack for empty extra pile
             int opponentHandCount = 0;
             int opponentDrawCount = 0;
             int playerHandCount = 0;
@@ -327,17 +329,17 @@ public class SpeedController {
                     opponentHandCount = speedInstance.getPlayerMap().get(id).getHand().getSize();
                     opponentDrawCount = speedInstance.getPlayerMap().get(id).getDrawPile().getSize();
                 }
-                if(id.equals(sessionID)){ //player
+                if (id.equals(sessionID)) { //player
                     playerHandCount = speedInstance.getPlayerMap().get(id).getHand().getSize();
                     playerDrawCount = speedInstance.getPlayerMap().get(id).getDrawPile().getSize();
                 }
             }
 
             //tally up and declare winner.
-            if((opponentDrawCount + opponentHandCount) > (playerDrawCount + playerHandCount)){
+            if ((opponentDrawCount + opponentHandCount) > (playerDrawCount + playerHandCount)) {
                 speedInstance.getPlayerMap().get(sessionID).setDidWin(true);
                 speedInstance.getPlayerMap().get(opponentId).setDidWin(false);
-            }else{
+            } else {
                 speedInstance.getPlayerMap().get(opponentId).setDidWin(true);
                 speedInstance.getPlayerMap().get(sessionID).setDidWin(false);
             }
