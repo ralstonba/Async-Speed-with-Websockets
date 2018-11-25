@@ -31,7 +31,7 @@ namespace Models {
                 "QUEEN",
                 "KING"];
 
-            return `img/${ranks.indexOf(rank) + 1}${suit}.png`;
+            return `img/${ranks.indexOf(rank) + 1}${suit}.webp`;
         }
 
         set suit(theSuit: string) {
