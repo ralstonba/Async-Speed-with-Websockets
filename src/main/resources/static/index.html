@@ -27,14 +27,14 @@
         <div class="card-row">
             <div class="row">
                 <div class="col-xs-6 col-xs-offset-3">
-                    <img class="card" alt="card10" src="img/BCard_Back.png"/>
+                    <img class="card" alt="card10" src="img/BCard_Back.webp"/>
                 </div>
             </div>
         </div>
         <div class="card-row">
             <div class="row">
                 <div class="col-xs-3">
-                    <img class="card" alt="card0" src="img/BCard_Back.png"/>
+                    <img class="card" alt="card0" src="img/BCard_Back.webp"/>
                 </div>
                 <div class="col-xs-6" style="text-align: center;">
                     <div style="float:left" ui-on-Drop="d.onDrop($event,$data,d.playedCards, d.gameState.playCard1, 1)">
@@ -49,7 +49,7 @@
                 </div>
                 <div class="col-xs-3 hhand"
                      ng-class="{'active-hand':!d.gameState.player.handStale, 'disabled-hand': d.gameState.player.handStale}">
-                    <img ng-click="d.stale()" class="card" alt="card10" src="img/BCard_Back.png" style="float:right"/>
+                    <img ng-click="d.stale()" class="card" alt="card10" src="img/BCard_Back.webp" style="float:right"/>
                 </div>
             </div>
         </div>
@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <div class="col-xs-6 hhand active-hand" style="float:right" ng-if="d.gameState.player.drawPile.cards.length">
-                    <img trans-card ng-click="d.drawCard()" class="card" alt="card10" src="img/BCard_Back.png"/>
+                    <img trans-card ng-click="d.drawCard()" class="card" alt="card10" src="img/BCard_Back.webp"/>
                 </div>
             </div>
         </div>
